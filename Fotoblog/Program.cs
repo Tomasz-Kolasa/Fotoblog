@@ -1,4 +1,6 @@
+using Fotoblog.BLL.Services.TagService;
 using Fotoblog.DAL;
+using Fotoblog.Utils.AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddAutoMapper(typeof(MappingProfiles));
+builder.Services.AddScoped<ITagService, TagService>();
 
 var app = builder.Build();
 
