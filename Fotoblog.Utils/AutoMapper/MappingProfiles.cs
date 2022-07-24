@@ -8,8 +8,9 @@ namespace Fotoblog.Utils.AutoMapper
     {
         public MappingProfiles()
         {
-            CreateMap<CreateTagVm, TagEntity>().ReverseMap();
+            CreateMap<UpdateTagVm, TagEntity>().ReverseMap();
             CreateMap<TagVm, TagEntity>().ReverseMap();
+            CreateMap<NewTagVm, TagEntity>().ReverseMap();
         }
     }
 }

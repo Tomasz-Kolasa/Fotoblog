@@ -5,7 +5,9 @@ namespace Fotoblog.BLL.Services.TagService
 {
     public interface ITagService
     {
-        Task<ServiceResult> AddNewTag(CreateTagVm createTagVm);
+        Task<ServiceResult> AddNewTag(NewTagVm createTagVm);
         Task<ServiceResult<List<TagVm>>> GetAllTags();
+        Task<ServiceResult> UpdateTag(UpdateTagVm updateTagVm);
+        Task<ServiceResult> RemoveTag(RemoveTagVm removeTagVm);
     }
 }

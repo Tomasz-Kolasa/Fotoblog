@@ -1,5 +1,4 @@
 ﻿using Fotoblog.BLL.Services.TagService;
-using Fotoblog.Controllers.ActionFilter;
 using Fotoblog.Utils.ViewModels.Tags;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,17 +14,30 @@ namespace Fotoblog.Controllers
         }
 
         [HttpPost]
-        [ValidateModel]
-        public async Task<IActionResult> AddNewTag([FromBody] CreateTagVm createTagVm )
+        public async Task<IActionResult> AddNewTag([FromBody] NewTagVm createTagVm )
         {
             var result = await _tagService.AddNewTag(createTagVm);
             return FromResult(result);
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> GetAllTags()
         {
             var result = await _tagService.GetAllTags();
+            return FromResult(result);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateTag([FromBody] UpdateTagVm updateTag)
+        {
+            var result = await _tagService.UpdateTag(updateTag);
+            return FromResult(result);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> RemoveTag([FromBody] RemoveTagVm removeTagVm)
+        {
+            var result = await _tagService.RemoveTag(removeTagVm);
             return FromResult(result);
         }
     }

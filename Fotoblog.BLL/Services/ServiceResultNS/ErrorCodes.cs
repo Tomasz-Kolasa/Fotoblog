@@ -6,6 +6,7 @@
         GeneralError = 0,
         // register
         TagAlreadyCreated = 10,
-        NoTagsFound = 11
+        NoTagsFound = 11,
+        TagNotExists = 12
     }
 }

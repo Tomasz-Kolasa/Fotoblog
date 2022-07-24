@@ -2,7 +2,7 @@
 
 namespace Fotoblog.Utils.ViewModels.Tags
 {
-    public class CreateTagVm
+    public class NewTagVm
     {
         [Required]
         [MinLength(3)]
