@@ -52,9 +52,9 @@ namespace Fotoblog.BLL.Services.TagService
             return ServiceResult.Ok();
         }
 
-        public async Task<ServiceResult> RemoveTag(RemoveTagVm removeTagVm)
+        public async Task<ServiceResult> RemoveTag(int tagId)
         {
-            var tagToRemove = await _dbContext.TagEntities.FirstOrDefaultAsync(x => x.Id == removeTagVm.Id);
+            var tagToRemove = await _dbContext.TagEntities.FirstOrDefaultAsync(x => x.Id == tagId);
 
             if (tagToRemove == null)
             {

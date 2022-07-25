@@ -8,6 +8,6 @@ namespace Fotoblog.BLL.Services.TagService
         Task<ServiceResult> AddNewTag(NewTagVm createTagVm);
         Task<ServiceResult<List<TagVm>>> GetAllTags();
         Task<ServiceResult> UpdateTag(UpdateTagVm updateTagVm);
-        Task<ServiceResult> RemoveTag(RemoveTagVm removeTagVm);
+        Task<ServiceResult> RemoveTag(int tagId);
     }
 }
