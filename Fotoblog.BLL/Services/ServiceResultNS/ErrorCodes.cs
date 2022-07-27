@@ -4,9 +4,8 @@
     {
         // general
         GeneralError = 0,
-        // register
+        // tags
         TagAlreadyCreated = 10,
-        NoTagsFound = 11,
-        TagNotExists = 12
+        TagNotExists = 11
     }
 }

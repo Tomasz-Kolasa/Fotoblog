@@ -18,6 +18,11 @@ const routes = [
         name: 'EditTagView',
         path: '/editTag/:tagId/:tagName',
         component: () => import(/* webpackChunkName: "EditTagView" */ '../views/EditTagView.vue')
+      },
+      {
+        name: 'AddNewTagView',
+        path: '/addNewTag',
+        component: () => import(/* webpackChunkName: "EditTagView" */ '../views/AddNewTagView.vue')
       }
     ]
   }

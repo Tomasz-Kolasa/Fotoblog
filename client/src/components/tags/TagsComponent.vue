@@ -2,7 +2,13 @@
   <div>
     <v-row align="center"
     justify="end">
-      <v-btn color="indigo" outlined class="ma-4">Dodaj tag</v-btn>
+      <v-btn
+      color="indigo"
+      outlined
+      class="ma-4"
+      @click="$router.push('/addNewTag')">
+        Dodaj tag
+      </v-btn>
     </v-row>
     <v-simple-table>
       <template v-slot:default>
@@ -20,7 +26,12 @@
               <td>
                 <v-row>
                   <v-btn color="primary" class="mr-2" @click="goToEditPage(tag.id, tag.name)">edytuj</v-btn>
-                  <v-btn color="error">usuń</v-btn>
+                  <v-btn
+                    color="error"
+                    @click.stop="openDialogAndRememberTagId(tag.name, tag.id)"
+                  >
+                    usuń
+                  </v-btn>
                 </v-row>
               </td>
             </tr>
@@ -39,6 +50,36 @@
           </tbody>
       </template>
     </v-simple-table>
+    <v-dialog
+      v-model="dialog"
+      persistent
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title class="text-h5">
+          Potwierdź
+        </v-card-title>
+        <v-card-text>Tag <strong>{{tagNameToBeDeleted}}</strong> zostanie usunięty</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="dialog = false"
+          >
+            Nie
+          </v-btn>
+          <v-btn
+            color="error"
+            :loading=isDeleteTagBtnLoaderActive
+            text
+            @click="deleteTag()"
+          >
+            Tak
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -48,7 +89,11 @@
     name: 'TagsComponent',
     data () {
       return {
-        tags: undefined
+        tags: undefined,
+        dialog: false,
+        isDeleteTagBtnLoaderActive: false,
+        tagNameToBeDeleted: '',
+        tagIdToBeDeleted: 0
       }
     },
     methods: {
@@ -59,6 +104,33 @@
       goToEditPage(tagId, tagName)
       {
         this.$router.push("/editTag/"+tagId+"/"+tagName)
+      },
+      async deleteTag()
+      {
+        this.isDeleteTagBtnLoaderActive = true
+
+        try{
+            const { data } = await this.$http.delete('Tags/Remove/'+this.tagIdToBeDeleted)
+            
+            if(data.status && data.status == true){
+              this.tags = undefined
+              this.dialog = false
+              this.getTags()
+            }
+            else if(data.status){
+                alert(data.status.errorCode)
+            }
+        } catch{
+            // exception thrown in axios.js
+        } finally{
+            this.isDeleteTagBtnLoaderActive = false
+        }
+      },
+      openDialogAndRememberTagId(tagNameToBeDeleted, tagIdToBeDeleted)
+      {
+        this.tagNameToBeDeleted = tagNameToBeDeleted
+        this.tagIdToBeDeleted = tagIdToBeDeleted
+        this.dialog=true
       }
     },
     mounted() {

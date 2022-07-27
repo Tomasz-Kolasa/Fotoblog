@@ -2,7 +2,7 @@
     <v-container>
         <v-row>
             <v-col>
-                <h2>Zmień nazwę taga</h2>
+                <h2>Dodaj nowy tag</h2>
                 <v-form
                     ref="form"
                     v-model="valid"
@@ -17,7 +17,7 @@
                     </v-text-field>
                     <v-btn
                         color="warning"
-                        @click="ChangeTagName"
+                        @click="AddNewTag"
                         :disabled="!valid"
                         :loading="isSubmitBtnLoaderActive"
                         >
@@ -37,7 +37,7 @@
 </template>
 <script>
 export default {
-    name: "EditTagView",
+    name: "AddNewTagView",
     data(){
         return {
             valid: false,
@@ -50,25 +50,24 @@ export default {
         }
     },
     methods: {
-        ChangeTagName(){
+        AddNewTag(){
             if(!this.valid)
             {
                 return;
             }
 
             this.isSubmitBtnLoaderActive = true
-            this.updateTag();
+            this.addTag();
         },
-        async updateTag(){
+        async addTag(){
 
-            var updatedTag = {
-                id: this.$route.params.tagId,
-                newName: this.tagName
+            var newTag = {
+                name: this.tagName
             }
 
             try{
-                const { data } = await this.$http.put('Tags/Update', updatedTag)
-                
+                const { data } = await this.$http.post('Tags/AddNew', newTag)
+
                 if(data.status && data.status == true){
                     alert('Sukces!')
                     this.$router.push("/")
@@ -82,11 +81,6 @@ export default {
                 this.isSubmitBtnLoaderActive = false
             }
       }
-    },
-    mounted()
-    {
-        this.tagName = this.$route.params.tagName
     }
-
 }
 </script>
