@@ -1,15 +1,17 @@
 <template>
-  <hello-world />
+    <v-container>
+      <v-row>
+        <v-col>
+          <TagsComponent/>
+        </v-col>
+      </v-row>
+    </v-container>
 </template>
 
 <script>
-  import HelloWorld from '../components/HelloWorld'
-
-  export default {
-    name: 'HomeView',
-
-    components: {
-      HelloWorld,
-    },
-  }
+import TagsComponent from "../components/tags/TagsComponent.vue";
+export default {
+    name: "HomeView",
+    components: { TagsComponent }
+}
 </script>
