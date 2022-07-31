@@ -1,7 +1,7 @@
 import Axios from 'axios';
 import Vue from 'vue'
 
-Axios.defaults.baseURL='https://localhost:7141/api/' 
+Axios.defaults.baseURL='https://localhost:5000/api/' 
 Vue.prototype.$http = Axios
 
 Axios.interceptors.response.use(response => response, error => {
@@ -17,8 +17,8 @@ Axios.interceptors.response.use(response => response, error => {
               alert("Tag już istnieje.")
               break;
             case 11:
-                alert("Tag nie istnieje.")
-                break; 
+              alert("Tag nie istnieje.")
+              break; 
             default:
               alert("Axios response interceptor - response error code: "+error.response.data.errorCode)
               break;  
@@ -40,5 +40,7 @@ Axios.interceptors.response.use(response => response, error => {
   else{
     alert("Błąd sieci, przepraszamy.")
   }
-  return Promise.reject(error)
+  // return Promise.reject(error)
 });
+
+export default Axios;

@@ -42,6 +42,7 @@ export default {
         return {
             valid: false,
             tagName: "",
+            tagId: 0,
             isSubmitBtnLoaderActive: false,
             tagRules: [
                 v => !!v || 'Pole wymagane',
@@ -62,30 +63,24 @@ export default {
         async updateTag(){
 
             var updatedTag = {
-                id: this.$route.params.tagId,
+                id: this.tagId,
                 newName: this.tagName
             }
 
-            try{
-                const { data } = await this.$http.put('Tags/Update', updatedTag)
-                
-                if(data.status && data.status == true){
-                    alert('Sukces!')
-                    this.$router.push("/")
-                }
-                else if(data.status){
-                    alert(data.status.errorCode)
-                }
-            } catch{
-                // exception thrown in axios.js
-            } finally{
-                this.isSubmitBtnLoaderActive = false
+            const response = await this.$http.put('Tags/Update', updatedTag)
+            
+            if(response.data && response.data.status){
+                alert('Sukces!')
+                this.$router.push("/")
             }
+
+            this.isSubmitBtnLoaderActive = false
       }
     },
     mounted()
     {
         this.tagName = this.$route.params.tagName
+        this.tagId = this.$route.params.tagId
     }
 
 }

@@ -2,16 +2,16 @@
     <v-container>
       <v-row>
         <v-col>
-          <TagsComponent/>
+          <Tags/>
         </v-col>
       </v-row>
     </v-container>
 </template>
 
 <script>
-import TagsComponent from "../components/tags/TagsComponent.vue";
+import Tags from "../components/tags/Tags.vue";
 export default {
     name: "HomeView",
-    components: { TagsComponent }
+    components: { Tags }
 }
 </script>

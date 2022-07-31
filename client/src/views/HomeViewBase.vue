@@ -30,9 +30,7 @@
     </v-footer>
   </div>
 </template>
-
 <script>
-
 export default {
   name: 'HomeViewBase',
   data(){

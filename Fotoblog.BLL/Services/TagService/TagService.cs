@@ -35,7 +35,7 @@ namespace Fotoblog.BLL.Services.TagService
             var readTags = await _dbContext.TagEntities.ToListAsync();
             var tags = _mapper.Map<List<TagVm>>(readTags);
 
-            return ServiceResult<List<TagVm>>.Ok(tags);            
+            return ServiceResult<List<TagVm>>.Ok(tags);         
         }
 
         public async Task<ServiceResult> UpdateTag(UpdateTagVm updateTagVm)

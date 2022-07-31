@@ -65,21 +65,14 @@ export default {
                 name: this.tagName
             }
 
-            try{
-                const { data } = await this.$http.post('Tags/AddNew', newTag)
+            const response = await this.$http.post('Tags/AddNew', newTag)
 
-                if(data.status && data.status == true){
-                    alert('Sukces!')
-                    this.$router.push("/")
-                }
-                else if(data.status){
-                    alert(data.status.errorCode)
-                }
-            } catch{
-                // exception thrown in axios.js
-            } finally{
-                this.isSubmitBtnLoaderActive = false
+            if(response && response.data.status){
+                alert('Sukces!')
+                this.$router.push("/")
             }
+
+            this.isSubmitBtnLoaderActive = false
       }
     }
 }
