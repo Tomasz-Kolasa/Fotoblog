@@ -66,7 +66,6 @@
 </template>
 
 <script>
-
   export default {
     name: 'tags-manager',
     data () {
@@ -112,6 +111,7 @@
         if(response && response.data.status){
           this.getTags()
           this.dialog = false
+          this.$toast.success('Sukces!')
         }
 
         this.isDeleteTagBtnLoaderActive = false

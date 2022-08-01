@@ -11,34 +11,34 @@ Axios.interceptors.response.use(response => response, error => {
         {
           switch(error.response.data.errorCode) {
             case 0:
-              alert("Wystąpił ogólny błąd.")
+              Vue.$toast.error("Wystąpił ogólny błąd.")
               break; 
             case 10:
-              alert("Tag już istnieje.")
+              Vue.$toast.error("Tag już istnieje.")
               break;
             case 11:
-              alert("Tag nie istnieje.")
+              Vue.$toast.error("Tag nie istnieje.")
               break; 
             default:
-              alert("Axios response interceptor - response error code: "+error.response.data.errorCode)
+              Vue.$toast.error("Axios response interceptor - response error code: "+error.response.data.errorCode)
               break;  
           }
         } else {
           // an error that should not normally happen
-          alert("Wystąpił błąd, przepraszamy.")
+          this.$toast.error("Wystąpił błąd, przepraszamy.")
           console.log('err: registration->response->no errorCode prop')
           console.log('error.response.data.errors:')
           console.log(error.response.data.errors)
         }
     }
     else if (error.request) {
-      alert("Brak odpowiedzi z serwera, przepraszamy")
+      Vue.$toast.error("Brak odpowiedzi z serwera, przepraszamy")
     } else {
-      alert("Wystąpił błąd, przepraszamy.")
+      Vue.$toast.error("Wystąpił błąd, przepraszamy.")
     }
   }
   else{
-    alert("Błąd sieci, przepraszamy.")
+    Vue.$toast.error("Błąd sieci, przepraszamy.")
   }
   // return Promise.reject(error)
 });

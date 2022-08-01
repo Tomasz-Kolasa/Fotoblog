@@ -70,7 +70,7 @@ export default {
             const response = await this.$http.put('Tags/Update', updatedTag)
             
             if(response.data && response.data.status){
-                alert('Sukces!')
+                this.$toast.success('Sukces!')
                 this.$router.push("/")
             }
 

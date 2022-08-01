@@ -68,7 +68,7 @@ export default {
             const response = await this.$http.post('Tags/AddNew', newTag)
 
             if(response && response.data.status){
-                alert('Sukces!')
+                this.$toast.success('Sukces!')
                 this.$router.push("/")
             }
 
