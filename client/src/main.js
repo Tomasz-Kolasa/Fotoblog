@@ -8,7 +8,7 @@ import vuetify from './plugins/vuetify'
 import './axios.js'
 
 Vue.use(VueToast, {
-  
+  duration: 5000
 });
 
 Vue.config.productionTip = false

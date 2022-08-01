@@ -15,11 +15,6 @@ const routes = [
         component: () => import(/* webpackChunkName: "HomeView" */ '../views/HomeView.vue')
       },
       {
-        name: 'EditTagView',
-        path: '/edit-tag/:tagId/:tagName',
-        component: () => import(/* webpackChunkName: "EditTagView" */ '../views/EditTagView.vue')
-      },
-      {
         name: 'AddNewTagView',
         path: '/add-new-tag',
         component: () => import(/* webpackChunkName: "EditTagView" */ '../views/AddNewTagView.vue')

@@ -15,11 +15,11 @@
       :headers="headers"
       :items="tags"
       hide-default-footer
-      :loading="loading"
+      :loading="tableLoading"
     >
       <template v-slot:[`item.actions`]="{ item }">
         <v-row>
-          <v-btn color="primary" class="mr-2" @click="$router.push(`/edit-tag/${item.id}/${item.name}`)">edytuj</v-btn>
+          <v-btn color="primary" class="mr-2" @click="openEditDialog(item)">edytuj</v-btn>
           <v-btn
             color="error"
             @click="openRemoveDialog(item)"
@@ -32,8 +32,8 @@
 
 
     <v-dialog
-      v-if="dialog"
-      v-model="dialog"
+      v-if="removeDialog"
+      v-model="removeDialog"
       persistent
       max-width="500"
     >
@@ -53,7 +53,7 @@
           </v-btn>
           <v-btn
             color="error"
-            :loading=isDeleteTagBtnLoaderActive
+            :loading=isRemoveTagBtnLoaderActive
             text
             @click="deleteTag()"
           >
@@ -62,6 +62,50 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog
+      v-if="editDialog"
+      v-model="editDialog"
+      persistent
+      max-width="800"
+    >
+      <v-card>
+        <v-card-title class="text-h5">
+          Edytuj tag
+        </v-card-title>
+          <v-card-text>
+            <v-form
+                ref="form"
+                v-model="isEditFormValid"
+            >
+                <v-text-field
+                    v-model="editVm.name"
+                    required
+                    :counter="15"
+                    :rules="tagRules"
+                    autofocus
+                >
+                </v-text-field>
+                <v-btn
+                    color="warning"
+                    @click="changeTagName()"
+                    :disabled="!isEditFormValid"
+                    :loading="isEditTagBtnLoaderActive"
+                    >
+                    zapisz
+                </v-btn>
+                <v-btn
+                    class="ml-3"
+                    color="error"
+                    @click="closeEditDialog()"
+                >
+                    anuluj
+                </v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+    </v-dialog>
+
   </div>
 </template>
 
@@ -85,15 +129,25 @@
             value: 'actions'
           }
         ],
-        dialog: false,
-        isDeleteTagBtnLoaderActive: false,
+        removeDialog: false,
+        isRemoveTagBtnLoaderActive: false,
         removeVm: null,
-        loading: false
+
+        editDialog: false,
+        isEditTagBtnLoaderActive: false,
+        editVm: null,
+        isEditFormValid: false,
+        tagRules: [
+            v => !!v || 'Pole wymagane',
+            v => (v.length >= 3 && v.length <= 15) || '3 - 15 zanków'
+        ],
+
+        tableLoading: false
       }
     },
     methods: {
       async getTags(){
-        this.loading = true
+        this.tableLoading = true
         
         const response = await this.$http.get('Tags/GetAll')
 
@@ -101,28 +155,55 @@
           this.tags = response.data.data
         }
 
-        this.loading = false
+        this.tableLoading = false
       },
       async deleteTag(){
-        this.isDeleteTagBtnLoaderActive = true
+        this.isRemoveTagBtnLoaderActive = true
 
         const response = await this.$http.delete('Tags/Remove/'+this.removeVm.id)
         
         if(response && response.data.status){
           this.getTags()
-          this.dialog = false
+          this.removeDialog = false
           this.$toast.success('Sukces!')
         }
 
-        this.isDeleteTagBtnLoaderActive = false
+        this.isRemoveTagBtnLoaderActive = false
+      },
+      async changeTagName(){
+        this.isEditTagBtnLoaderActive = true
+
+        var updatedTag = {
+            id: this.editVm.id,
+            newName: this.editVm.name
+        }
+
+        const response = await this.$http.put('Tags/Update', updatedTag)
+        
+        if(response.data && response.data.status){
+            console.log(response)
+            // this.$toast.success('Sukces!')
+            this.getTags()
+        }
+
+        this.isEditTagBtnLoaderActive = false
+        this.closeEditDialog()
       },
       openRemoveDialog(item){
         this.removeVm = item
-        this.dialog = true
+        this.removeDialog = true
       },
       closeRemoveDialog(){
-        this.dialog = false
+        this.removeDialog = false
         this.removeVm = null
+      },
+      openEditDialog(item){
+        this.editVm = {...item}
+        this.editDialog = true
+      },
+      closeEditDialog(){
+        this.editDialog = false
+        this.editVm = null
       }
     },
     mounted() {

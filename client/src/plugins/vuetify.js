@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import Vuetify from 'vuetify/lib/framework';
+import Vue from 'vue'
+import Vuetify from 'vuetify/lib/framework'
 import pl from 'vuetify/src/locale/pl.ts'
 
 Vue.use(Vuetify);
