@@ -25,7 +25,7 @@ Axios.interceptors.response.use(response => response, error => {
           }
         } else {
           // an error that should not normally happen
-          this.$toast.error("Wystąpił błąd, przepraszamy.")
+          Vue.$toast.error("Wystąpił błąd, przepraszamy.")
           console.log('err: registration->response->no errorCode prop')
           console.log('error.response.data.errors:')
           console.log(error.response.data.errors)

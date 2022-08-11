@@ -4,10 +4,9 @@
     justify="end">
       <v-btn
       color="indigo"
-      outlined
       class="ma-4"
-      link
-      @click="$router.push('/add-new-tag')">
+      outlined
+      @click="openAddDialog()">
         Dodaj tag
       </v-btn>
     </v-row>
@@ -19,8 +18,14 @@
     >
       <template v-slot:[`item.actions`]="{ item }">
         <v-row>
-          <v-btn color="primary" class="mr-2" @click="openEditDialog(item)">edytuj</v-btn>
+          <v-btn color="primary"
+            outlined
+            class="mr-2"
+            @click="openEditDialog(item)">
+              edytuj
+          </v-btn>
           <v-btn
+            outlined
             color="error"
             @click="openRemoveDialog(item)"
           >
@@ -45,16 +50,16 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            color="primary"
-            text
+            color="success"
+            outlined
             @click="closeRemoveDialog()"
           >
             Nie
           </v-btn>
           <v-btn
             color="error"
+            outlined
             :loading=isRemoveTagBtnLoaderActive
-            text
             @click="deleteTag()"
           >
             Tak
@@ -87,7 +92,8 @@
                 >
                 </v-text-field>
                 <v-btn
-                    color="warning"
+                    color="success"
+                    outlined
                     @click="changeTagName()"
                     :disabled="!isEditFormValid"
                     :loading="isEditTagBtnLoaderActive"
@@ -97,7 +103,53 @@
                 <v-btn
                     class="ml-3"
                     color="error"
+                    outlined
                     @click="closeEditDialog()"
+                >
+                    anuluj
+                </v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+    </v-dialog>
+
+    <v-dialog
+      v-if="addDialog"
+      v-model="addDialog"
+      persistent
+      max-width="800"
+    >
+      <v-card>
+        <v-card-title class="text-h5">
+          Dodaj tag
+        </v-card-title>
+          <v-card-text>
+            <v-form
+                ref="form"
+                v-model="isAddFormValid"
+            >
+                <v-text-field
+                    v-model="addVm.name"
+                    required
+                    :counter="15"
+                    :rules="tagRules"
+                    autofocus
+                >
+                </v-text-field>
+                <v-btn
+                    color="success"
+                    outlined
+                    @click="addTag()"
+                    :disabled="!isAddFormValid"
+                    :loading="isAddTagBtnLoaderActive"
+                    >
+                    zapisz
+                </v-btn>
+                <v-btn
+                    class="ml-3"
+                    color="error"
+                    outlined
+                    @click="closeAddDialog()"
                 >
                     anuluj
                 </v-btn>
@@ -142,6 +194,11 @@
             v => (v.length >= 3 && v.length <= 15) || '3 - 15 zanków'
         ],
 
+        addDialog: false,
+        isAddTagBtnLoaderActive: false,
+        addVm: null,
+        isAddFormValid: false,
+
         tableLoading: false
       }
     },
@@ -180,14 +237,26 @@
 
         const response = await this.$http.put('Tags/Update', updatedTag)
         
-        if(response.data && response.data.status){
-            console.log(response)
-            // this.$toast.success('Sukces!')
+        if(response && response.data.status){
+            this.$toast.success('Sukces!')
             this.getTags()
         }
 
         this.isEditTagBtnLoaderActive = false
         this.closeEditDialog()
+      },
+      async addTag(){
+        this.isAddSubmitBtnLoaderActive = true
+
+          const response = await this.$http.post('Tags/AddNew', this.addVm)
+
+          if(response && response.data.status){
+              this.$toast.success('Sukces!')
+              this.getTags()
+          }
+
+          this.isSubmitBtnLoaderActive = false
+          this.closeAddDialog();
       },
       openRemoveDialog(item){
         this.removeVm = item
@@ -204,6 +273,14 @@
       closeEditDialog(){
         this.editDialog = false
         this.editVm = null
+      },
+      openAddDialog(){
+        this.addVm = { name:''}
+        this.addDialog = true
+      },
+      closeAddDialog(){
+        this.addDialog = false
+        this.addVm = null
       }
     },
     mounted() {

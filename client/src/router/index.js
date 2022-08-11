@@ -13,11 +13,6 @@ const routes = [
         name: 'HomeView',
         path: '',
         component: () => import(/* webpackChunkName: "HomeView" */ '../views/HomeView.vue')
-      },
-      {
-        name: 'AddNewTagView',
-        path: '/add-new-tag',
-        component: () => import(/* webpackChunkName: "EditTagView" */ '../views/AddNewTagView.vue')
       }
     ]
   }
