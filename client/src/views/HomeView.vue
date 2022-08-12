@@ -2,7 +2,7 @@
     <v-container>
       <v-row>
         <v-col>
-          Main Page
+          Photos upload tbd
         </v-col>
       </v-row>
     </v-container>
