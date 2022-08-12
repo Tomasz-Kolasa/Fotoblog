@@ -141,7 +141,7 @@
                     outlined
                     @click="addTag()"
                     :disabled="!isAddFormValid"
-                    :loading="isAddTagBtnLoaderActive"
+                    :loading="isAddSubmitBtnLoaderActive"
                     >
                     zapisz
                 </v-btn>
@@ -195,7 +195,7 @@
         ],
 
         addDialog: false,
-        isAddTagBtnLoaderActive: false,
+        isAddSubmitBtnLoaderActive: false,
         addVm: null,
         isAddFormValid: false,
 
@@ -255,7 +255,7 @@
               this.getTags()
           }
 
-          this.isSubmitBtnLoaderActive = false
+          this.isAddSubmitBtnLoaderActive = false
           this.closeAddDialog();
       },
       openRemoveDialog(item){

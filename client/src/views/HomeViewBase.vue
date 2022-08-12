@@ -4,7 +4,8 @@
       <v-row>
         <v-col>
           <nav>
-            <router-link to="/">Home</router-link>
+            <router-link to="/" class="mr-3">Home</router-link>
+            <router-link to="/manage-tags">Tagi</router-link>
           </nav>
         </v-col>
       </v-row>
