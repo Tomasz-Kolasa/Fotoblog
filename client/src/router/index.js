@@ -18,6 +18,11 @@ const routes = [
         name: 'ManageTagsView',
         path: '/manage-tags',
         component: () => import(/* webpackChunkName: "HomeView" */ '../views/TagsManagerView.vue')
+      },
+      {
+        name: 'AddPhotoView',
+        path: '/add-photo',
+        component: () => import(/* webpackChunkName: "HomeView" */ '../views/AddPhotoView.vue')
       }
     ]
   }

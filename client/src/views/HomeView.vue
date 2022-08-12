@@ -2,7 +2,7 @@
     <v-container>
       <v-row>
         <v-col>
-          Photos upload tbd
+          <h1>Home view</h1>
         </v-col>
       </v-row>
     </v-container>
