@@ -6,8 +6,9 @@
             <h1>Dodaj zdjęcie</h1>
             <v-img
               :src="previewSrc"
-              :hidden="!(!!previewSrc)"
               alt="Podgląd dodawanego zdjęcia"
+              max-width="100%"
+              contain
             ></v-img>
           </div>
         </v-col>
@@ -15,6 +16,7 @@
           <v-form
             v-model="isFormValid"
             enctype="multipart/form-data"
+            :disabled="isSubmitBtnLoaderActive"
           >
             <v-file-input
               required
@@ -23,6 +25,7 @@
               accept="image/*"
               label="Wybierz zdjęcie">
             </v-file-input>
+
             <v-text-field
               v-model="photoVm.title"
               required
@@ -30,11 +33,13 @@
               placeholder="wpisz tytuł..."
             >
             </v-text-field>
+
             <v-text-field
               v-model="photoVm.description"
               placeholder="wpisz opis (opcjonalnie)..."
             >
             </v-text-field>
+
             <h3>wybierz tagi</h3>
             <v-progress-circular
               :style="{display: tagsLoaderDisplayStyle}"
@@ -45,7 +50,7 @@
             <v-checkbox v-for="tag in allTags" v-bind:key="tag.id"
               v-model="photoVm.tags"
               :label="tag.name"
-              color="red"
+              color="purple"
               :value="tag.id"
             ></v-checkbox>
 
@@ -56,7 +61,7 @@
               :loading="isSubmitBtnLoaderActive"
               :disabled="!isFormValid"
             >
-              Wyślij
+              Zapisz
             </v-btn>
           </v-form>
         </v-col>
@@ -65,6 +70,7 @@
 </template>
 
 <script>
+import placeholderImage from '@/assets/1.png'
 
 export default {
     name: "AddPhotoView",
@@ -74,12 +80,12 @@ export default {
         photoVm: {
           title: '',
           description: '',
-          file: null,
+          fileBase64: null,
           tags: []
         },
         allTags: [],
         tagsLoaderDisplayStyle: 'block',
-        previewSrc: '',
+        previewSrc: placeholderImage,
         isSubmitBtnLoaderActive: false,
         titleRules: [
           v => !!v || 'Pole wymagane',
@@ -92,12 +98,21 @@ export default {
       }
     },
     methods: {
-      savePhoto(){
+      async savePhoto(){
         this.isSubmitBtnLoaderActive = true
-        console.log(this.photoVm)
+        // console.log(this.photoVm)
+
+        const response = await this.$http.post('Photos/AddNew', this.photoVm)
+
+        if(response && response.data.status){
+            this.$toast.success('Sukces!')
+        }
+
+        this.isSubmitBtnLoaderActive = false
+
       },
       setPreview(){
-        this.previewSrc = ''
+        this.previewSrc = placeholderImage
         const file = document.querySelector('input[type=file]').files[0];
         // console.log(document.querySelector('input[type=file]').files)
         const reader = new FileReader();
@@ -105,6 +120,7 @@ export default {
         reader.addEventListener("load", () => {
           // convert image file to base64 string
           this.previewSrc = reader.result
+          this.photoVm.fileBase64 = reader.result
         }, false);
 
         if (file) {

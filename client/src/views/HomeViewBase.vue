@@ -6,7 +6,7 @@
           <nav>
             <router-link to="/" class="mr-3">Home</router-link>
             <router-link to="/manage-tags" class="mr-3">Tagi</router-link>
-            <router-link to="/add-photo">Zdjęcia</router-link>
+            <router-link to="/add-photo">Dodaj zdjęcie</router-link>
           </nav>
         </v-col>
       </v-row>
