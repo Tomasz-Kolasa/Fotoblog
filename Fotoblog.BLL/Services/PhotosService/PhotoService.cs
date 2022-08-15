@@ -2,6 +2,7 @@
 using Fotoblog.BLL.Services.ServiceResultNS;
 using Fotoblog.DAL;
 using Fotoblog.Utils.ViewModels.Photos;
+using Microsoft.AspNetCore.Http;
 
 namespace Fotoblog.BLL.Services.PhotosService
 {
@@ -11,8 +12,9 @@ namespace Fotoblog.BLL.Services.PhotosService
         {
         }
 
-        public async Task<ServiceResult> AddPhoto(NewPhotoVm newPhotoVm)
+        public async Task<ServiceResult> AddPhoto(NewPhotoDataVm newPhotoDataVm)
         {
+
             await _dbContext.SaveChangesAsync();
 
             return ServiceResult.Ok();

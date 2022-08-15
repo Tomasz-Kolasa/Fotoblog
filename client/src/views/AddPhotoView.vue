@@ -2,8 +2,12 @@
     <v-container>
       <v-row>
         <v-col>
+          <h1>Dodaj zdjęcie</h1>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
           <div style="width: 100%">
-            <h1>Dodaj zdjęcie</h1>
             <v-img
               :src="previewSrc"
               alt="Podgląd dodawanego zdjęcia"
@@ -15,7 +19,6 @@
         <v-col>
           <v-form
             v-model="isFormValid"
-            enctype="multipart/form-data"
             :disabled="isSubmitBtnLoaderActive"
           >
             <v-file-input
@@ -40,12 +43,13 @@
             >
             </v-text-field>
 
-            <h3>wybierz tagi</h3>
             <v-progress-circular
-              :style="{display: tagsLoaderDisplayStyle}"
+              :style="{display: (isLoadingTags?'block':'none')}"
               indeterminate
               color="primary"
             ></v-progress-circular>
+
+            <p class="red--text accent-3" :style="{display: (isAllTagsLoadingFailed?'block':'none')}">błąd wczytywania tagów :/</p>
 
             <v-checkbox v-for="tag in allTags" v-bind:key="tag.id"
               v-model="photoVm.tags"
@@ -80,11 +84,11 @@ export default {
         photoVm: {
           title: '',
           description: '',
-          fileBase64: null,
           tags: []
         },
         allTags: [],
-        tagsLoaderDisplayStyle: 'block',
+        isAllTagsLoadingFailed: false,
+        isLoadingTags: true,
         previewSrc: placeholderImage,
         isSubmitBtnLoaderActive: false,
         titleRules: [
@@ -100,9 +104,18 @@ export default {
     methods: {
       async savePhoto(){
         this.isSubmitBtnLoaderActive = true
-        // console.log(this.photoVm)
 
-        const response = await this.$http.post('Photos/AddNew', this.photoVm)
+        const file = document.querySelector('input[type=file]').files[0];
+        
+        const formData = new FormData()
+        formData.append('newPhotoData', JSON.stringify(this.photoVm) )
+        formData.append('imgFile', file)
+        // formData.append('imgFile', file)
+        // formData.append('Title', this.photoVm.title)
+        // formData.append('Description', this.photoVm.description)
+        // formData.append('Tags', String(this.photoVm.tags))
+
+        const response = await this.$http.post('Photos/AddNew', formData, {headers: { "Content-Type": "multipart/form-data" }})
 
         if(response && response.data.status){
             this.$toast.success('Sukces!')
@@ -120,7 +133,6 @@ export default {
         reader.addEventListener("load", () => {
           // convert image file to base64 string
           this.previewSrc = reader.result
-          this.photoVm.fileBase64 = reader.result
         }, false);
 
         if (file) {
@@ -132,9 +144,12 @@ export default {
 
         if(response && response.data.status){
           this.allTags = response.data.data
+          this.isAllTagsLoadingFailed = false
+        } else {
+          this.isAllTagsLoadingFailed = true
         }
 
-        this.tagsLoaderDisplayStyle = 'none'
+        this.isLoadingTags = false
       }
     },
     mounted(){

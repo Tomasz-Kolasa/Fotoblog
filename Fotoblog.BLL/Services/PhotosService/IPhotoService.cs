@@ -5,6 +5,6 @@ namespace Fotoblog.BLL.Services.PhotosService
 {
     public interface IPhotoService
     {
-        Task<ServiceResult> AddPhoto(NewPhotoVm newPhotoVm);
+        Task<ServiceResult> AddPhoto(NewPhotoDataVm newPhotoDataVm);
     }
 }
