@@ -15,5 +15,13 @@ namespace Fotoblog.DAL
         {
 
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<PhotoEntity>()
+                .HasMany(p => p.Tags)
+                .WithMany(p => p.Photos)
+                .UsingEntity(j => j.ToTable("PhotosTags"));
+        }
     }
 }

@@ -106,14 +106,10 @@ export default {
         this.isSubmitBtnLoaderActive = true
 
         const file = document.querySelector('input[type=file]').files[0];
-        
+
         const formData = new FormData()
         formData.append('newPhotoData', JSON.stringify(this.photoVm) )
         formData.append('imgFile', file)
-        // formData.append('imgFile', file)
-        // formData.append('Title', this.photoVm.title)
-        // formData.append('Description', this.photoVm.description)
-        // formData.append('Tags', String(this.photoVm.tags))
 
         const response = await this.$http.post('Photos/AddNew', formData, {headers: { "Content-Type": "multipart/form-data" }})
 
