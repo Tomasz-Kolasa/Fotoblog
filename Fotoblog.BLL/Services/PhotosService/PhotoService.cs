@@ -42,8 +42,8 @@ namespace Fotoblog.BLL.Services.PhotosService
 
             try
             {
-                saveOriginalPhoto(origSavePath, newPhotoDataVm.file);
-                saveThumbnail(thumbnailSavePath, newPhotoDataVm.file);
+                await saveOriginalPhoto(origSavePath, newPhotoDataVm.file);
+                await saveThumbnail(thumbnailSavePath, newPhotoDataVm.file);
             }
             catch (Exception)
             {
@@ -53,7 +53,7 @@ namespace Fotoblog.BLL.Services.PhotosService
             return ServiceResult.Ok();
         }
 
-        private async void saveThumbnail(string path, IFormFile file)
+        private async Task saveThumbnail(string path, IFormFile file)
         {
             using (Image image = Image.Load(file.OpenReadStream()))
             {
@@ -81,7 +81,7 @@ namespace Fotoblog.BLL.Services.PhotosService
             }
         }
 
-        private async void saveOriginalPhoto(string path, IFormFile file)
+        private async Task saveOriginalPhoto(string path, IFormFile file)
         {
             using (var stream = File.Create(path))
             {
