@@ -2,8 +2,14 @@
 using Fotoblog.BLL.Services.ServiceResultNS;
 using Fotoblog.DAL;
 using Fotoblog.Utils.ViewModels.Photos;
+using Microsoft.AspNetCore.Http;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Processing;
+using System.IO;
 using System.Net;
-using System.Text.Encodings.Web;
 
 namespace Fotoblog.BLL.Services.PhotosService
 {
@@ -11,8 +17,9 @@ namespace Fotoblog.BLL.Services.PhotosService
     {
         private readonly string[] _allowedExtensions = { ".jpg", "jpeg", ".png" };
         private readonly string[] _allowedImgContentTypes = { "image/jpeg", "image/png" };
-        private string? _uploadedFileNameExtension;
-        private string _saveLocation;
+        private string? _uploadedFileExtension;
+        private string _saveLocation = "c:\\uploads";
+        private readonly int _thumbnailWidth = 600;
         public PhotoService(ApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
         }
@@ -30,14 +37,56 @@ namespace Fotoblog.BLL.Services.PhotosService
             }
                 
 
-            var imgPathOrig = Path.Combine(_saveLocation, $"orginal{_uploadedFileNameExtension}");
+            var origSavePath = Path.Combine(_saveLocation, $"orginal{_uploadedFileExtension}");
+            var thumbnailSavePath = Path.Combine(_saveLocation, $"thumbnail{_uploadedFileExtension}");
 
-            using (var stream = File.Create(imgPathOrig))
+            try
             {
-                await newPhotoDataVm.file.CopyToAsync(stream);
+                saveOriginalPhoto(origSavePath, newPhotoDataVm.file);
+                saveThumbnail(thumbnailSavePath, newPhotoDataVm.file);
+            }
+            catch (Exception)
+            {
+                return ServiceResult.Fail(ErrorCodes.CouldNotSaveTheFile);
             }
 
             return ServiceResult.Ok();
+        }
+
+        private async void saveThumbnail(string path, IFormFile file)
+        {
+            using (Image image = Image.Load(file.OpenReadStream()))
+            {
+                int width = _thumbnailWidth;
+                int height = 0; // will automatically determine the correct dimensions size to preserve the original aspect ratio
+                image.Mutate(x => x.Resize(width, height, KnownResamplers.Lanczos3));
+
+                using (var outStream = File.Create(path))
+                {                 
+                    await image.SaveAsync(outStream, GetImageEncoder());
+                }
+            }
+        }
+
+        private IImageEncoder GetImageEncoder()
+        {
+            switch(_uploadedFileExtension)
+            {
+                case ".jpg":
+                    return new JpegEncoder();
+                case ".png":
+                    return new PngEncoder();
+                default:
+                    throw new Exception();
+            }
+        }
+
+        private async void saveOriginalPhoto(string path, IFormFile file)
+        {
+            using (var stream = File.Create(path))
+            {
+                await file.CopyToAsync(stream);
+            }
         }
 
         private void doInputValidation(NewPhotoDataVm newPhotoDataVm)
@@ -47,7 +96,7 @@ namespace Fotoblog.BLL.Services.PhotosService
                 throw new ArgumentException();
             }
 
-            _uploadedFileNameExtension = Path.GetExtension(newPhotoDataVm.file.FileName).ToLowerInvariant();
+            _uploadedFileExtension = Path.GetExtension(newPhotoDataVm.file.FileName).ToLowerInvariant();
 
             if (!isFileExtensionAllowed() || !isFileContentTypeAllowed(newPhotoDataVm.file.ContentType))
             {
@@ -86,8 +135,8 @@ namespace Fotoblog.BLL.Services.PhotosService
         {
             
             return (
-                string.IsNullOrEmpty(_uploadedFileNameExtension)
-                ||!_allowedExtensions.Contains(_uploadedFileNameExtension)
+                string.IsNullOrEmpty(_uploadedFileExtension)
+                ||!_allowedExtensions.Contains(_uploadedFileExtension)
                 ) ? false : true;
         }
 
@@ -105,8 +154,7 @@ namespace Fotoblog.BLL.Services.PhotosService
             do
             {
                 _saveLocation = Path.Combine(
-                    // _config["StoredFilesPath"],
-                    "c:\\uploads",
+                    _saveLocation,
                     Path.GetRandomFileName() );
 
                 if (!Directory.Exists(_saveLocation))
