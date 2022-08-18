@@ -39,6 +39,7 @@
 
             <v-text-field
               v-model="photoVm.description"
+              :rules="descriptionRules"
               placeholder="wpisz opis (opcjonalnie)..."
             >
             </v-text-field>
@@ -95,6 +96,9 @@ export default {
           v => !!v || 'Pole wymagane',
           v => (v.length>=2 && v.length<=15) || '2-15 znaków'
         ],
+        descriptionRules: [
+          v => (v.length<=15) || 'mniej niż 30 znaków'
+        ],
         fileRules: [
           v => !!v || 'Zdjęcie jest wymagane',
           v => (v && v.size > 0) || 'Zdjęcie jest wymagane',
@@ -123,7 +127,6 @@ export default {
       setPreview(){
         this.previewSrc = placeholderImage
         const file = document.querySelector('input[type=file]').files[0];
-        // console.log(document.querySelector('input[type=file]').files)
         const reader = new FileReader();
 
         reader.addEventListener("load", () => {
