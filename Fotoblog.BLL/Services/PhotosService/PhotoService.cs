@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Fotoblog.BLL.Services.ServiceResultNS;
 using Fotoblog.DAL;
+using Fotoblog.DAL.Entities;
 using Fotoblog.Utils.ViewModels.Photos;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
@@ -18,7 +19,7 @@ namespace Fotoblog.BLL.Services.PhotosService
         private readonly string[] _allowedExtensions = { ".jpg", "jpeg", ".png" };
         private readonly string[] _allowedImgContentTypes = { "image/jpeg", "image/png" };
         private string? _uploadedFileExtension;
-        private string _saveLocation = "c:\\uploads";
+        private string _saveLocation = "c:\\uploads"; // random folder added later
         private readonly int _thumbnailWidth = 600;
         public PhotoService(ApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
@@ -50,7 +51,22 @@ namespace Fotoblog.BLL.Services.PhotosService
                 return ServiceResult.Fail(ErrorCodes.CouldNotSaveTheFile);
             }
 
+            await SaveEntity(newPhotoDataVm);
+
             return ServiceResult.Ok();
+        }
+
+        private async Task SaveEntity(NewPhotoDataVm newPhotoDataVm)
+        {
+            var entity = new PhotoEntity();
+            entity.Title = newPhotoDataVm.title;
+            entity.Description = newPhotoDataVm.description;
+            entity.ImagePath = _saveLocation;
+            entity.CreateDate = DateTime.Now;
+            entity.Tags = _dbContext.TagEntities.Where(t => newPhotoDataVm.tags.Contains(t.Id)).ToList();
+
+            await _dbContext.AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
         }
 
         private async Task saveThumbnail(string path, IFormFile file)

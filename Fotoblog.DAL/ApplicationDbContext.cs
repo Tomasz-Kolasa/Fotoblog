@@ -11,6 +11,7 @@ namespace Fotoblog.DAL
     public class ApplicationDbContext : DbContext
     {
         public DbSet<TagEntity> TagEntities { get; set; }
+        public DbSet<PhotoEntity> PhotoEntities { get; set; }
         public ApplicationDbContext( DbContextOptions<ApplicationDbContext> options):base(options)
         {
 
