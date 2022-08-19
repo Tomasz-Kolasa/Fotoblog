@@ -14,6 +14,16 @@
               max-width="100%"
               contain
             ></v-img>
+
+            <v-progress-linear
+              v-model="uploadProgress"
+              height="25"
+              color="amber"
+              :active="isProgressBar"
+            >
+              <strong>{{ Math.ceil(uploadProgress) }}%</strong>
+            </v-progress-linear>
+
           </div>
         </v-col>
         <v-col>
@@ -92,6 +102,8 @@ export default {
         isLoadingTags: true,
         previewSrc: placeholderImage,
         isSubmitBtnLoaderActive: false,
+        isProgressBar: false,
+        uploadProgress: 0,
         titleRules: [
           v => !!v || 'Pole wymagane',
           v => (v.length>=2 && v.length<=15) || '2-15 znaków'
@@ -115,13 +127,34 @@ export default {
         formData.append('newPhotoData', JSON.stringify(this.photoVm) )
         formData.append('imgFile', file)
 
-        const response = await this.$http.post('Photos/AddNew', formData, {headers: { "Content-Type": "multipart/form-data" }})
+        this.uploadProgress = 0
+        this.isProgressBar = true
+
+        const response = await this.$http.post(
+          'Photos/AddNew',
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+            onUploadProgress: (progressEvent) => {
+
+              const totalLength = progressEvent.lengthComputable ?
+              progressEvent.total :
+              progressEvent.target.getResponseHeader('content-length')
+              || progressEvent.target.getResponseHeader('x-decompressed-content-length');
+
+                if (totalLength !== null) {
+                  this.uploadProgress = Math.round( (progressEvent.loaded * 100) / totalLength )
+                }
+            }
+          }
+        )
 
         if(response && response.data.status){
             this.$toast.success('Sukces!')
         }
 
         this.isSubmitBtnLoaderActive = false
+        this.isProgressBar = false
 
       },
       setPreview(){
