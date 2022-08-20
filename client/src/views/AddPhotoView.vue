@@ -28,7 +28,8 @@
         </v-col>
         <v-col>
           <v-form
-            v-model="isFormValid"
+            ref="form"
+            v-model="valid"
             :disabled="isSubmitBtnLoaderActive"
           >
             <v-file-input
@@ -74,7 +75,7 @@
               outlined
               @click="savePhoto()"
               :loading="isSubmitBtnLoaderActive"
-              :disabled="!isFormValid"
+              :disabled="!valid"
             >
               Zapisz
             </v-btn>
@@ -91,7 +92,7 @@ export default {
     name: "AddPhotoView",
     data() {
       return {
-        isFormValid: false,
+        valid: false,
         photoVm: {
           title: '',
           description: '',
@@ -151,6 +152,7 @@ export default {
 
         if(response && response.data.status){
             this.$toast.success('Sukces!')
+            this.$router.go()
         }
 
         this.isSubmitBtnLoaderActive = false
