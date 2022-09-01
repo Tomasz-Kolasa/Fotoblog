@@ -33,6 +33,7 @@
             :disabled="isSubmitBtnLoaderActive"
           >
             <v-file-input
+              ref="fileupload"
               required
               :rules="fileRules"
               @change="setPreview"
@@ -87,6 +88,7 @@
 
 <script>
 import placeholderImage from '@/assets/1.png'
+import {plcImg} from '@/utils/placeholder.js'
 
 export default {
     name: "AddPhotoView",
@@ -151,8 +153,14 @@ export default {
         )
 
         if(response && response.data.status){
+            this.photoVm.title = ''
+            this.photoVm.description = ''
+            this.photoVm.tags = []
+            this.$refs.fileupload.reset()
+            this.previewSrc = plcImg
+            this.$refs.form.resetValidation()
             this.$toast.success('Sukces!')
-            this.$router.go()
+            // this.$router.go()
         }
 
         this.isSubmitBtnLoaderActive = false
@@ -160,13 +168,14 @@ export default {
 
       },
       setPreview(){
-        this.previewSrc = placeholderImage
+        this.previewSrc = plcImg
         const file = document.querySelector('input[type=file]').files[0];
         const reader = new FileReader();
 
         reader.addEventListener("load", () => {
           // convert image file to base64 string
           this.previewSrc = reader.result
+          // console.log(reader.result)
         }, false);
 
         if (file) {

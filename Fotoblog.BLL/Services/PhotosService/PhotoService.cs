@@ -9,20 +9,35 @@ using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
-using System.IO;
 using System.Net;
+using Microsoft.Extensions.Configuration;
+using System.Linq;
 
 namespace Fotoblog.BLL.Services.PhotosService
 {
     public class PhotoService : BaseService, IPhotoService
     {
-        private readonly string[] _allowedExtensions = { ".jpg", "jpeg", ".png" };
-        private readonly string[] _allowedImgContentTypes = { "image/jpeg", "image/png" };
+        private string _saveLocation;
+        private readonly List<string> _allowedExtensions;
+        private readonly List<string> _allowedImgContentTypes;
         private string? _uploadedFileExtension;
-        private string _saveLocation = "c:\\uploads"; // random folder added later
         private readonly int _thumbnailWidth = 600;
         public PhotoService(ApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
+            var AppConfig = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+
+            _saveLocation = AppConfig.GetSection("AppSettings:PhotosUpload:BaseSavePath")
+                .Value.ToString(); // random folder added later
+
+            _allowedExtensions = AppConfig.GetSection("AppSettings:PhotosUpload:AllowedExtensions")
+                .GetChildren().ToList().Select(x => x.Value).ToList();
+
+            _allowedImgContentTypes = AppConfig.GetSection("AppSettings:PhotosUpload:AllowedImgContentTypes")
+                .GetChildren().ToList().Select(x => x.Value).ToList();
+
+            _thumbnailWidth = Int32.Parse(
+                AppConfig.GetSection("AppSettings:PhotosUpload:ThumbnailWidth").Value
+                );
         }
 
         public async Task<ServiceResult> AddPhoto(NewPhotoDataVm newPhotoDataVm)
@@ -43,8 +58,8 @@ namespace Fotoblog.BLL.Services.PhotosService
 
             try
             {
-                await saveOriginalPhoto(origSavePath, newPhotoDataVm.file);
-                await saveThumbnail(thumbnailSavePath, newPhotoDataVm.file);
+                await SaveOriginalPhoto(origSavePath, newPhotoDataVm.file);
+                await SaveThumbnail(thumbnailSavePath, newPhotoDataVm.file);
             }
             catch (Exception)
             {
@@ -69,7 +84,7 @@ namespace Fotoblog.BLL.Services.PhotosService
             await _dbContext.SaveChangesAsync();
         }
 
-        private async Task saveThumbnail(string path, IFormFile file)
+        private async Task SaveThumbnail(string path, IFormFile file)
         {
             using (Image image = Image.Load(file.OpenReadStream()))
             {
@@ -89,6 +104,7 @@ namespace Fotoblog.BLL.Services.PhotosService
             switch(_uploadedFileExtension)
             {
                 case ".jpg":
+                case ".jpeg":
                     return new JpegEncoder();
                 case ".png":
                     return new PngEncoder();
@@ -97,7 +113,7 @@ namespace Fotoblog.BLL.Services.PhotosService
             }
         }
 
-        private async Task saveOriginalPhoto(string path, IFormFile file)
+        private async Task SaveOriginalPhoto(string path, IFormFile file)
         {
             using (var stream = File.Create(path))
             {
