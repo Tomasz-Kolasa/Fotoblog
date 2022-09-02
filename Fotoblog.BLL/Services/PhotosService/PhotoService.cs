@@ -61,8 +61,8 @@ namespace Fotoblog.BLL.Services.PhotosService
 
             try
             {
-                await SaveOriginalPhoto(origSavePath, newPhotoDataVm.file);
-                await SaveThumbnail(thumbnailSavePath, newPhotoDataVm.file);
+                await SaveOriginalPhoto(origSavePath, newPhotoDataVm.File);
+                await SaveThumbnail(thumbnailSavePath, newPhotoDataVm.File);
             }
             catch (Exception)
             {
@@ -77,10 +77,13 @@ namespace Fotoblog.BLL.Services.PhotosService
         private async Task SaveEntity(NewPhotoDataVm newPhotoDataVm)
         {
             var entity = new PhotoEntity();
-            entity.Title = newPhotoDataVm.title;
-            entity.Description = newPhotoDataVm.description;
+            entity.Title = newPhotoDataVm.Title;
+            entity.Description = newPhotoDataVm.Description;
             entity.ImagePath = _saveLocation;
-            entity.Tags = _dbContext.TagEntities.Where(t => newPhotoDataVm.tags.Contains(t.Id)).ToList();
+            if(newPhotoDataVm.Tags != null)
+            {
+                entity.Tags = _dbContext.TagEntities.Where(t => newPhotoDataVm.Tags.Contains(t.Id)).ToList();
+            }
 
             await _dbContext.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
@@ -125,42 +128,42 @@ namespace Fotoblog.BLL.Services.PhotosService
 
         private void doInputValidation(NewPhotoDataVm newPhotoDataVm)
         {
-            if(newPhotoDataVm.file == null)
+            if(newPhotoDataVm.File == null)
             {
                 throw new ArgumentException();
             }
 
-            _uploadedFileExtension = Path.GetExtension(newPhotoDataVm.file.FileName).ToLowerInvariant();
+            _uploadedFileExtension = Path.GetExtension(newPhotoDataVm.File.FileName).ToLowerInvariant();
 
-            if (!isFileExtensionAllowed() || !isFileContentTypeAllowed(newPhotoDataVm.file.ContentType))
+            if (!isFileExtensionAllowed() || !isFileContentTypeAllowed(newPhotoDataVm.File.ContentType))
             {
                 throw new ArgumentException();
             }
 
-            if (newPhotoDataVm.file.Length == 0)
+            if (newPhotoDataVm.File.Length == 0)
             {
                 throw new ArgumentException();
             }
 
-            if( string.IsNullOrEmpty(newPhotoDataVm.title) ||
-                newPhotoDataVm.title.Length < 2 || newPhotoDataVm.title.Length > 15 )
+            if( string.IsNullOrEmpty(newPhotoDataVm.Title) ||
+                newPhotoDataVm.Title.Length < 2 || newPhotoDataVm.Title.Length > 15 )
             {
                 throw new ArgumentException();
             }
             else
             {
-                newPhotoDataVm.title =  WebUtility.HtmlEncode(newPhotoDataVm.title);
+                newPhotoDataVm.Title =  WebUtility.HtmlEncode(newPhotoDataVm.Title);
             }
 
-            if (!string.IsNullOrEmpty(newPhotoDataVm.description) )
+            if (!string.IsNullOrEmpty(newPhotoDataVm.Description) )
             {
-                if(newPhotoDataVm.description.Length > 30)
+                if(newPhotoDataVm.Description.Length > 30)
                 {
                     throw new ArgumentException();
                 }
                 else
                 {
-                    newPhotoDataVm.description = WebUtility.HtmlEncode(newPhotoDataVm.description);
+                    newPhotoDataVm.Description = WebUtility.HtmlEncode(newPhotoDataVm.Description);
                 }
             }
         }

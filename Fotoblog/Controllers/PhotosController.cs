@@ -16,17 +16,8 @@ namespace Fotoblog.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddNew(IFormCollection data, IFormFile imgFile)
+        public async Task<IActionResult> AddNew([FromForm] NewPhotoDataVm newPhotoDataVm)
         {
-            NewPhotoDataVm? newPhotoDataVm = JsonSerializer.Deserialize<NewPhotoDataVm>(data["newPhotoData"]);
-
-            if (newPhotoDataVm == null)
-            {
-                return FromResult( ServiceResult.Fail(ErrorCodes.GeneralError) );
-            }
-
-            newPhotoDataVm.file = imgFile;
-
             var result = await _photoService.AddPhoto(newPhotoDataVm);
             return FromResult(result);
         }

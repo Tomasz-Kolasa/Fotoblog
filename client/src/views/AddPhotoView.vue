@@ -127,8 +127,13 @@ export default {
         const file = document.querySelector('input[type=file]').files[0];
 
         const formData = new FormData()
-        formData.append('newPhotoData', JSON.stringify(this.photoVm) )
-        formData.append('imgFile', file)
+
+        formData.append('Title',this.photoVm.title)
+        formData.append('Description',this.photoVm.description)
+        this.photoVm.tags.forEach(element => {
+          formData.append('Tags[]',element)
+        })
+        formData.append('File', file)
 
         this.uploadProgress = 0
         this.isProgressBar = true
