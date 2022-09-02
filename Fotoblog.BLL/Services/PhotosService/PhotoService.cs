@@ -17,7 +17,7 @@ namespace Fotoblog.BLL.Services.PhotosService
 {
     public class PhotoService : BaseService, IPhotoService
     {
-        private string _saveLocation;
+        private readonly string _saveLocation;
         private readonly List<string> _allowedExtensions;
         private readonly List<string> _allowedImgContentTypes;
         private string? _uploadedFileExtension;
@@ -26,8 +26,11 @@ namespace Fotoblog.BLL.Services.PhotosService
         {
             var AppConfig = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
-            _saveLocation = AppConfig.GetSection("AppSettings:PhotosUpload:BaseSavePath")
-                .Value.ToString(); // random folder added later
+            _saveLocation = Path.Combine(
+                AppConfig.GetSection("AppSettings:PhotosUpload:BaseSavePath")
+                    .Value.ToString(),
+                Guid.NewGuid().ToString()
+                );
 
             _allowedExtensions = AppConfig.GetSection("AppSettings:PhotosUpload:AllowedExtensions")
                 .GetChildren().ToList().Select(x => x.Value).ToList();
@@ -45,7 +48,7 @@ namespace Fotoblog.BLL.Services.PhotosService
             try
             {
                 doInputValidation(newPhotoDataVm);
-                PreparePhotoSaveLocation();
+                Directory.CreateDirectory(_saveLocation);
             }
             catch(Exception)
             {
@@ -77,7 +80,6 @@ namespace Fotoblog.BLL.Services.PhotosService
             entity.Title = newPhotoDataVm.title;
             entity.Description = newPhotoDataVm.description;
             entity.ImagePath = _saveLocation;
-            entity.CreateDate = DateTime.Now;
             entity.Tags = _dbContext.TagEntities.Where(t => newPhotoDataVm.tags.Contains(t.Id)).ToList();
 
             await _dbContext.AddAsync(entity);
@@ -179,23 +181,6 @@ namespace Fotoblog.BLL.Services.PhotosService
                 string.IsNullOrEmpty(contentType)
                 || !_allowedImgContentTypes.Contains(contentType)
                 ) ? false : true;
-        }
-
-        private void PreparePhotoSaveLocation()
-        {
-            do
-            {
-                _saveLocation = Path.Combine(
-                    _saveLocation,
-                    Path.GetRandomFileName() );
-
-                if (!Directory.Exists(_saveLocation))
-                {
-                    Directory.CreateDirectory(_saveLocation);
-                    return;
-                }
-
-            } while(true);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Fotoblog.BLL.Services.TagService
         {
         }
 
-        public async Task<ServiceResult> AddNewTag(NewTagVm createTagVm)
+        public async Task<ServiceResult> AddNew(NewTagVm createTagVm)
         {
             var isTagAlreadyExists = await _dbContext.TagEntities.AnyAsync(x => x.Name == createTagVm.Name);
 
@@ -30,7 +30,7 @@ namespace Fotoblog.BLL.Services.TagService
             return ServiceResult.Ok();
         }
 
-        public async Task<ServiceResult<List<TagVm>>> GetAllTags()
+        public async Task<ServiceResult<List<TagVm>>> GetAll()
         {
             var readTags = await _dbContext.TagEntities.ToListAsync();
             var tags = _mapper.Map<List<TagVm>>(readTags);
@@ -38,7 +38,7 @@ namespace Fotoblog.BLL.Services.TagService
             return ServiceResult<List<TagVm>>.Ok(tags);         
         }
 
-        public async Task<ServiceResult> UpdateTag(UpdateTagVm updateTagVm)
+        public async Task<ServiceResult> Update(UpdateTagVm updateTagVm)
         {
             var requestedTag = await _dbContext.TagEntities.FirstOrDefaultAsync(x => x.Id == updateTagVm.Id);
 
@@ -52,7 +52,7 @@ namespace Fotoblog.BLL.Services.TagService
             return ServiceResult.Ok();
         }
 
-        public async Task<ServiceResult> RemoveTag(int tagId)
+        public async Task<ServiceResult> Remove(int tagId)
         {
             var tagToRemove = await _dbContext.TagEntities.FirstOrDefaultAsync(x => x.Id == tagId);
 

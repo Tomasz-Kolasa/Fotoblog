@@ -1,10 +1,5 @@
 ﻿using Fotoblog.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Fotoblog.DAL
 {
@@ -23,6 +18,25 @@ namespace Fotoblog.DAL
                 .HasMany(p => p.Tags)
                 .WithMany(p => p.Photos)
                 .UsingEntity(j => j.ToTable("PhotosTags"));
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            foreach (var entry in ChangeTracker.Entries<BaseEntity>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreatedAt = DateTime.Now;
+                        entry.Entity.UpdatedAt = DateTime.Now;
+                        break;
+                    case EntityState.Modified:
+                        entry.Entity.UpdatedAt = DateTime.Now;
+                        break;
+                }
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -21,28 +21,28 @@ namespace Fotoblog.Controllers
         [HttpPost]
         public async Task<IActionResult> AddNew([FromBody] NewTagVm createTagVm )
         {
-            var result = await _tagService.AddNewTag(createTagVm);
+            var result = await _tagService.AddNew(createTagVm);
             return FromResult(result);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _tagService.GetAllTags();
+            var result = await _tagService.GetAll();
             return FromResult(result);
         }
 
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateTagVm updateTag)
         {
-            var result = await _tagService.UpdateTag(updateTag);
+            var result = await _tagService.Update(updateTag);
             return FromResult(result);
         }
 
         [HttpDelete("{tagId}")]
         public async Task<IActionResult> Remove(int tagId)
         {
-            var result = await _tagService.RemoveTag(tagId);
+            var result = await _tagService.Remove(tagId);
             return FromResult(result);
         }
     }
