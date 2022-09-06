@@ -1,5 +1,6 @@
 ﻿using Fotoblog.BLL.Services.PhotosService;
 using Fotoblog.Utils.ViewModels.Photos;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fotoblog.Controllers
@@ -7,11 +8,18 @@ namespace Fotoblog.Controllers
     public class PhotosController : BaseController
     {
         private readonly IPhotoService _photoService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IServer _server;
 
-        public PhotosController(IPhotoService photoService, IWebHostEnvironment webHostEnvironment)
+        public PhotosController(IPhotoService photoService,
+            IWebHostEnvironment webHostEnvironment,
+            IServer server)
         {
+            _webHostEnvironment = webHostEnvironment;
             _photoService = photoService;
-            _photoService.SetLocation(webHostEnvironment.ContentRootPath);
+            _server = server;
+            //var addresses = _server.Features.Get<IServerAddressesFeature>().Addresses;
+            _photoService.SetLocation(_webHostEnvironment.ContentRootPath);
         }
 
         [HttpPost]
