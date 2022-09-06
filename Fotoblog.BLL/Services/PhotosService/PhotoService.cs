@@ -4,33 +4,26 @@ using Fotoblog.DAL;
 using Fotoblog.DAL.Entities;
 using Fotoblog.Utils.ViewModels.Photos;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
 using System.Net;
-using Microsoft.Extensions.Configuration;
-using System.Linq;
 
 namespace Fotoblog.BLL.Services.PhotosService
 {
     public class PhotoService : BaseService, IPhotoService
     {
-        private readonly string _saveLocation;
+        private string _saveLocation = "\\";
         private readonly List<string> _allowedExtensions;
         private readonly List<string> _allowedImgContentTypes;
         private string? _uploadedFileExtension;
-        private readonly int _thumbnailWidth = 600;
+        private readonly int _thumbnailWidth;
         public PhotoService(ApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
             var AppConfig = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-
-            _saveLocation = Path.Combine(
-                AppConfig.GetSection("AppSettings:PhotosUpload:BaseSavePath")
-                    .Value.ToString(),
-                Guid.NewGuid().ToString()
-                );
 
             _allowedExtensions = AppConfig.GetSection("AppSettings:PhotosUpload:AllowedExtensions")
                 .GetChildren().ToList().Select(x => x.Value).ToList();
@@ -40,6 +33,19 @@ namespace Fotoblog.BLL.Services.PhotosService
 
             _thumbnailWidth = Int32.Parse(
                 AppConfig.GetSection("AppSettings:PhotosUpload:ThumbnailWidth").Value
+                );
+        }
+
+        public void SetLocation(string contentRootPath)
+        {
+            var AppConfig = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+
+            string photosSaveFolder = AppConfig.GetSection("AppSettings:PhotosUpload:BaseSavePath")
+                    .Value.ToString();
+            string uniquePhotoFolderName = Guid.NewGuid().ToString();
+
+            _saveLocation = Path.Combine(
+               contentRootPath, photosSaveFolder, uniquePhotoFolderName
                 );
         }
 

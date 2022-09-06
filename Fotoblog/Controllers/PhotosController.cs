@@ -1,8 +1,6 @@
 ﻿using Fotoblog.BLL.Services.PhotosService;
-using Fotoblog.BLL.Services.ServiceResultNS;
 using Fotoblog.Utils.ViewModels.Photos;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace Fotoblog.Controllers
 {
@@ -10,9 +8,10 @@ namespace Fotoblog.Controllers
     {
         private readonly IPhotoService _photoService;
 
-        public PhotosController(IPhotoService photoService)
+        public PhotosController(IPhotoService photoService, IWebHostEnvironment webHostEnvironment)
         {
             _photoService = photoService;
+            _photoService.SetLocation(webHostEnvironment.ContentRootPath);
         }
 
         [HttpPost]
