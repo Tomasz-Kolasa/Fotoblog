@@ -28,5 +28,12 @@ namespace Fotoblog.Controllers
             var result = await _photoService.AddPhoto(newPhotoDataVm);
             return FromResult(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _photoService.GetAll();
+            return FromResult(result);
+        }
     }
 }

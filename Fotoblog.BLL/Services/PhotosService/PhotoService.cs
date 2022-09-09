@@ -4,6 +4,7 @@ using Fotoblog.DAL;
 using Fotoblog.DAL.Entities;
 using Fotoblog.Utils.ViewModels.Photos;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
@@ -16,7 +17,8 @@ namespace Fotoblog.BLL.Services.PhotosService
 {
     public class PhotoService : BaseService, IPhotoService
     {
-        private string _saveLocation = "\\";
+        private string _saveLocationAbsolute = "\\";
+        private string _saveLocationRelative = ".\\";
         private readonly List<string> _allowedExtensions;
         private readonly List<string> _allowedImgContentTypes;
         private string? _uploadedFileExtension;
@@ -44,9 +46,22 @@ namespace Fotoblog.BLL.Services.PhotosService
                     .Value.ToString();
             string uniquePhotoFolderName = Guid.NewGuid().ToString();
 
-            _saveLocation = Path.Combine(
+            _saveLocationAbsolute = Path.Combine(
                contentRootPath, photosSaveFolder, uniquePhotoFolderName
                 );
+
+            _saveLocationRelative = Path.Combine(
+               photosSaveFolder, uniquePhotoFolderName
+                );
+        }
+
+        public async Task<ServiceResult<List<PhotoVm>>> GetAll()
+        {
+            var allPhotos = _dbContext.PhotoEntities.Include(x => x.Tags).ToList();
+
+            var allPhotosVm = _mapper.Map<List<PhotoVm>>(allPhotos);
+
+            return ServiceResult<List<PhotoVm>>.Ok(allPhotosVm);
         }
 
         public async Task<ServiceResult> AddPhoto(NewPhotoDataVm newPhotoDataVm)
@@ -54,7 +69,7 @@ namespace Fotoblog.BLL.Services.PhotosService
             try
             {
                 doInputValidation(newPhotoDataVm);
-                Directory.CreateDirectory(_saveLocation);
+                Directory.CreateDirectory(_saveLocationAbsolute);
             }
             catch(Exception)
             {
@@ -62,8 +77,8 @@ namespace Fotoblog.BLL.Services.PhotosService
             }
                 
 
-            var origSavePath = Path.Combine(_saveLocation, $"orginal{_uploadedFileExtension}");
-            var thumbnailSavePath = Path.Combine(_saveLocation, $"thumbnail{_uploadedFileExtension}");
+            var origSavePath = Path.Combine(_saveLocationAbsolute, $"original{_uploadedFileExtension}");
+            var thumbnailSavePath = Path.Combine(_saveLocationAbsolute, $"thumbnail{_uploadedFileExtension}");
 
             try
             {
@@ -85,8 +100,15 @@ namespace Fotoblog.BLL.Services.PhotosService
             var entity = new PhotoEntity();
             entity.Title = newPhotoDataVm.Title;
             entity.Description = newPhotoDataVm.Description;
-            entity.ImagePath = _saveLocation;
-            if(newPhotoDataVm.Tags != null)
+            entity.Path = _saveLocationRelative;
+            entity.Extension = _uploadedFileExtension;
+            entity.OriginalUrl =
+                "Downloads/" + _saveLocationRelative.Replace("\\", "/")
+                + "/" + "original" + _uploadedFileExtension;
+            entity.ThumbnailUrl =
+                "Downloads/" + _saveLocationRelative.Replace("\\", "/")
+                + "/" + "thumbnail" + _uploadedFileExtension;
+            if (newPhotoDataVm.Tags != null)
             {
                 entity.Tags = _dbContext.TagEntities.Where(t => newPhotoDataVm.Tags.Contains(t.Id)).ToList();
             }

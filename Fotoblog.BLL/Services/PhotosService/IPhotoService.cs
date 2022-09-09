@@ -1,4 +1,5 @@
 ﻿using Fotoblog.BLL.Services.ServiceResultNS;
+using Fotoblog.DAL.Entities;
 using Fotoblog.Utils.ViewModels.Photos;
 
 namespace Fotoblog.BLL.Services.PhotosService
@@ -7,5 +8,7 @@ namespace Fotoblog.BLL.Services.PhotosService
     {
         Task<ServiceResult> AddPhoto(NewPhotoDataVm newPhotoDataVm);
         public void SetLocation(string contentRootPath);
+
+        Task<ServiceResult<List<PhotoVm>>> GetAll();
     }
 }
