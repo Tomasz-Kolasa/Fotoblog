@@ -112,7 +112,7 @@ export default {
           v => (v.length>=2 && v.length<=15) || '2-15 znaków'
         ],
         descriptionRules: [
-          v => (v.length<=15) || 'mniej niż 30 znaków'
+          v => (v.length<=30) || 'mniej niż 30 znaków'
         ],
         fileRules: [
           v => !!v || 'Zdjęcie jest wymagane',

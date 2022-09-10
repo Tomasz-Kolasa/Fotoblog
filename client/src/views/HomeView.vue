@@ -7,37 +7,19 @@
         <v-col v-if="isNoPhotosToShow">
           <h2>brak zdjęć</h2>
         </v-col>
-        <v-col
+        <photo-item
           v-for="photo in photos"
           :key="photo.id"
-          class="d-flex child-flex"
-          cols="6"
+          :photo="photo"
         >
-          <v-img
-            :src="$http.defaults.baseURL + photo.originalUrl"
-            lazy-src="@/assets/1.png"
-            :aspect-ratio="16/9"
-            class="grey lighten-2"
-          >
-            <template v-slot:placeholder>
-              <v-row
-                class="fill-height ma-0"
-                align="center"
-                justify="center"
-              >
-                <v-progress-circular
-                  indeterminate
-                  color="grey lighten-5"
-                ></v-progress-circular>
-              </v-row>
-            </template>
-          </v-img>
-        </v-col>
+        </photo-item>
       </v-row>
     </v-container>
 </template>
 
 <script>
+import Photo from '@/components/Photo.vue'
+
 export default {
     name: "HomeView",
     data(){
@@ -72,6 +54,9 @@ export default {
     },
     mounted(){
       this.getAllPhotos()
+    },
+    components: {
+      'photo-item': Photo
     }
 }
 </script>
