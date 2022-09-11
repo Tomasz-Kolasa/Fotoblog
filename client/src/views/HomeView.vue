@@ -11,6 +11,7 @@
           v-for="photo in photos"
           :key="photo.id"
           :photo="photo"
+          @remove-photo="removePhoto($event)"
         >
         </photo-item>
       </v-row>
@@ -33,7 +34,7 @@ export default {
 
         // https://localhost:5000/api/Downloads/photos/d13f0453-d1b1-4fb0-bc6b-680ac6ed6c96/original.jpg
 
-        const response = await this.$http.get('Photos/GetAll')
+        const response = await this.$http.get('Photos/GetAll').catch((response)=>{response})
 
         if(response && response.data.status){
           this.photos = response.data.data
@@ -41,10 +42,8 @@ export default {
         }
         this.isLoadingPhotos = false
       },
-      photoLink(photoVm, photoType="thumbnail"){
-        var apiUrl = this.$http.defaults.baseURL + 'Downloads/'
-        var photoLink = photoVm.imagePath.replace('\\','/') + '/' + photoType + photoVm.imageExtension
-        return apiUrl+photoLink
+      removePhoto(id){
+        this.photos = this.photos.filter(p => p.id != id)
       }
     },
     computed: {

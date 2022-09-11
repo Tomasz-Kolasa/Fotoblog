@@ -55,6 +55,11 @@ namespace Fotoblog.BLL.Services.PhotosService
                 );
         }
 
+        public async Task<ServiceResult> Delete(int id)
+        {
+            return ServiceResult.Fail(ErrorCodes.PhotoNotExists);
+        }
+
         public async Task<ServiceResult<List<PhotoVm>>> GetAll()
         {
             var allPhotos = _dbContext.PhotoEntities.Include(x => x.Tags).ToList();

@@ -10,5 +10,6 @@ namespace Fotoblog.BLL.Services.PhotosService
         public void SetLocation(string contentRootPath);
 
         Task<ServiceResult<List<PhotoVm>>> GetAll();
+        Task<ServiceResult> Delete(int id);
     }
 }

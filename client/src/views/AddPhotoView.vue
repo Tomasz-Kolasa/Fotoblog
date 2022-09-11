@@ -155,7 +155,7 @@ export default {
                 }
             }
           }
-        )
+        ).catch((response)=>{response})
 
         if(response && response.data.status){
             this.photoVm.title = ''
@@ -188,7 +188,7 @@ export default {
         }
       },
       async getTags(){
-        const response = await this.$http.get('Tags/GetAll')
+        const response = await this.$http.get('Tags/GetAll').catch((response)=>{response})
 
         if(response && response.data.status){
           this.allTags = response.data.data

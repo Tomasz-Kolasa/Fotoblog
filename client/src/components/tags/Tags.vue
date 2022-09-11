@@ -206,7 +206,7 @@
       async getTags(){
         this.tableLoading = true
         
-        const response = await this.$http.get('Tags/GetAll')
+        const response = await this.$http.get('Tags/GetAll').catch((response)=>{response})
 
         if(response && response.data.status){
           this.tags = response.data.data
@@ -217,7 +217,7 @@
       async deleteTag(){
         this.isRemoveTagBtnLoaderActive = true
 
-        const response = await this.$http.delete('Tags/Remove/'+this.removeVm.id)
+        const response = await this.$http.delete('Tags/Remove/'+this.removeVm.id).catch((response)=>{response})
         
         if(response && response.data.status){
           this.getTags()
@@ -235,7 +235,7 @@
             newName: this.editVm.name
         }
 
-        const response = await this.$http.put('Tags/Update', updatedTag)
+        const response = await this.$http.put('Tags/Update', updatedTag).catch((response)=>{response})
         
         if(response && response.data.status){
             this.$toast.success('Sukces!')
@@ -248,7 +248,7 @@
       async addTag(){
         this.isAddSubmitBtnLoaderActive = true
 
-          const response = await this.$http.post('Tags/AddNew', this.addVm)
+          const response = await this.$http.post('Tags/AddNew', this.addVm).catch((response)=>{response})
 
           if(response && response.data.status){
               this.$toast.success('Sukces!')

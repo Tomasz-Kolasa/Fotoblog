@@ -35,5 +35,12 @@ namespace Fotoblog.Controllers
             var result = await _photoService.GetAll();
             return FromResult(result);
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete([FromQuery] int id)
+        {
+            var result = await _photoService.Delete(id);
+            return FromResult(result);
+        }
     }
 }
