@@ -1,18 +1,20 @@
 <template>
 <v-col
-    class="d-flex child-flex flex-column"
+    class="d-flex child-flex flex-column mt-3"
     cols="6"
 >
-    <h4>{{ photo.title }}</h4>
-    <h5>{{photo.description}}</h5>
-    <p>{{photo.createdAt.substring(0,10)}}</p>
-    <div>
-    <span
-        class="px-2"
-        v-for="tag in photo.tags"
-        :key="tag.id">
-        {{tag.name}}
-    </span>
+    <div class="d-flex justify-space-between mb-2 text-subtitle-2">
+        <div>
+            <v-chip
+            class="px-2"
+            v-for="tag in photo.tags"
+            :key="tag.id">
+            {{tag.name}}
+            </v-chip>
+        </div>
+        <div class="text-right">
+            <v-chip outlined>{{photo.createdAt.substring(0,10)}}</v-chip>
+        </div>
     </div>
     <v-img
     :src="$http.defaults.baseURL + photo.originalUrl"
@@ -33,16 +35,13 @@
         </v-row>
     </template>
     </v-img>
+    <div class="text-h5 mt-1 text-center">{{ photo.title }}</div>
+    <div class="text-subtitle-1 text-center font-italic">{{photo.description  || "&nbsp;"}}</div>
 </v-col>
 </template>
 <script>
     export default {
         name: 'photo-item',
-        props: ['photo'],
-        data(){
-            return {
-
-            }
-        }
+        props: ['photo']
     }
 </script>
