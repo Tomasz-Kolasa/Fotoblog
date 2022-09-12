@@ -3,6 +3,7 @@ using Fotoblog.BLL.Services.ServiceResultNS;
 using Fotoblog.DAL;
 using Fotoblog.DAL.Entities;
 using Fotoblog.Utils.ViewModels.Photos;
+using Fotoblog.Utils.ViewModels.Tags;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -57,7 +58,17 @@ namespace Fotoblog.BLL.Services.PhotosService
 
         public async Task<ServiceResult> Delete(int id)
         {
-            return ServiceResult.Fail(ErrorCodes.PhotoNotExists);
+            var photoToDelete = await _dbContext.PhotoEntities.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (photoToDelete == null)
+            {
+                return ServiceResult.Fail(ErrorCodes.PhotoNotExists);
+            }
+
+            _dbContext.PhotoEntities.Remove(photoToDelete);
+            await _dbContext.SaveChangesAsync();
+            return ServiceResult.Ok();
+            
         }
 
         public async Task<ServiceResult<List<PhotoVm>>> GetAll()

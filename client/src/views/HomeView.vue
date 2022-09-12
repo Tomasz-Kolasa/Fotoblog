@@ -11,7 +11,8 @@
           v-for="photo in photos"
           :key="photo.id"
           :photo="photo"
-          @remove-photo="removePhoto($event)"
+          :photosStates="photosStates"
+          @delete-photo="deletePhoto(photo.id)"
         >
         </photo-item>
       </v-row>
@@ -19,7 +20,7 @@
 </template>
 
 <script>
-import Photo from '@/components/Photo.vue'
+import PhotoItem from '@/components/photo-item/PhotoItem.vue'
 
 export default {
     name: "HomeView",
@@ -27,23 +28,47 @@ export default {
       return {
         photos: [],
         isLoadingPhotos: true,
+        photosStates:{
+          beingDeleted: []
+        }
       }
     },
     methods: {
       async getAllPhotos(){
-
-        // https://localhost:5000/api/Downloads/photos/d13f0453-d1b1-4fb0-bc6b-680ac6ed6c96/original.jpg
-
         const response = await this.$http.get('Photos/GetAll').catch((response)=>{response})
 
         if(response && response.data.status){
           this.photos = response.data.data
-          console.log(this.photos)
         }
         this.isLoadingPhotos = false
       },
       removePhoto(id){
         this.photos = this.photos.filter(p => p.id != id)
+      },
+      async deletePhoto(id){
+        this.photosStates.beingDeleted.push(id)
+
+        const self = this
+        
+        const response = await this.$http.delete('photos/delete?id='+id)
+            .catch(function (response) {
+                if(response && response.data)
+                {
+                    var errorCode = response.data.errorCode
+                    if(30 == errorCode) // photo not exists
+                    {
+                        self.removePhoto(id)
+                    }
+                }
+            })
+
+        if(response && response.data.status)
+        {
+          this.removePhoto(id)
+          this.$toast.success("Zdjęcie zostało usunięte.")
+        }
+        
+        this.photosStates.beingDeleted = this.photosStates.beingDeleted.filter(e => e != id)
       }
     },
     computed: {
@@ -55,7 +80,7 @@ export default {
       this.getAllPhotos()
     },
     components: {
-      'photo-item': Photo
+      'photo-item': PhotoItem
     }
 }
 </script>
