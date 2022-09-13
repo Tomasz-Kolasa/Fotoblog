@@ -1,11 +1,22 @@
 <template>
     <v-container>
-      <v-row>
-        <v-col v-if="isLoadingPhotos">
-          loading...
+      <v-row v-if="isLoadingPhotos">
+        <v-col
+        v-for="n in 12"
+        :key="n"
+        cols="6"
+        class="d-flex child-flex"
+        >
+          <v-skeleton-loader
+          class="mb-6"
+          elevation="2"
+          type="image, article"
+          ></v-skeleton-loader>
         </v-col>
+      </v-row>
+      <v-row>  
         <v-col v-if="isNoPhotosToShow">
-          <h2>brak zdjęć</h2>
+          <h2 class="text-h4 text-center">brak zdjęć</h2>
         </v-col>
         <photo-item
           v-for="photo in photos"
