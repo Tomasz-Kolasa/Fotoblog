@@ -22,11 +22,41 @@
           v-for="photo in photos"
           :key="photo.id"
           :photo="photo"
-          :photosStates="photosStates"
-          @delete-photo="deletePhoto(photo.id)"
+          @delete-photo="openDeleteDialog(photo)"
         >
         </photo-item>
       </v-row>
+      <v-dialog
+        v-if="deleteDialog"
+        v-model="deleteDialog"
+        persistent
+        max-width="500"
+      >
+        <v-card>
+          <v-card-title class="text-h5">
+            Potwierdź
+          </v-card-title>
+          <v-card-text>Zdjęcie zostanie usunięte</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="success"
+              outlined
+              @click="closeDeleteDialog()"
+            >
+              Nie
+            </v-btn>
+            <v-btn
+              color="error"
+              outlined
+              :loading="isDeletingPhoto"
+              @click="deletePhoto(deleteVm.id)"
+            >
+              Tak
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-container>
 </template>
 
@@ -39,9 +69,10 @@ export default {
       return {
         photos: [],
         isLoadingPhotos: true,
-        photosStates:{
-          beingDeleted: []
-        }
+
+        isDeletingPhoto: false,
+        deleteDialog: false,
+        deleteVm: null,
       }
     },
     methods: {
@@ -57,7 +88,7 @@ export default {
         this.photos = this.photos.filter(p => p.id != id)
       },
       async deletePhoto(id){
-        this.photosStates.beingDeleted.push(id)
+        this.isDeletingPhoto = true
 
         const self = this
         
@@ -79,7 +110,16 @@ export default {
           this.$toast.success("Zdjęcie zostało usunięte.")
         }
         
-        this.photosStates.beingDeleted = this.photosStates.beingDeleted.filter(e => e != id)
+        this.isDeletingPhoto = false
+        this.deleteDialog = false
+      },
+      openDeleteDialog(photo){
+        this.deleteVm = photo
+        this.deleteDialog = true
+      },
+      closeDeleteDialog(){
+        this.deleteDialog = false
+        this.deleteVm = null
       }
     },
     computed: {

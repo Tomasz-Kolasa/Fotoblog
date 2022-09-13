@@ -6,7 +6,6 @@
         color="error darken-1"
         small
         fab
-        :loading="photosStates.beingDeleted.includes(photoId)"
         >
             <v-icon>{{icons.mdiDelete}}</v-icon>
         </v-btn>
@@ -17,7 +16,6 @@
     
     export default {
         name: 'options-bar',
-        props: ['photosStates', 'photoId'],
         data(){
             return {
                 icons: {

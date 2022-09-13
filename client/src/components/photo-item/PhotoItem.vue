@@ -23,8 +23,6 @@
     class="grey lighten-2"
     >
         <options-bar
-            :photoId="photo.id"
-            :photosStates="photosStates"
             @delete-photo="$emit('delete-photo')"
         ></options-bar>
         <template v-slot:placeholder>
@@ -49,7 +47,7 @@
 
     export default {
         name: 'photo-item',
-        props: ['photo','photosStates'],
+        props:['photo'],
         components: { 'options-bar': OptionsBar}
     }
 </script>

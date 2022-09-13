@@ -35,7 +35,6 @@
       </template>
     </v-data-table>
 
-
     <v-dialog
       v-if="removeDialog"
       v-model="removeDialog"
