@@ -23,6 +23,7 @@
           :key="photo.id"
           :photo="photo"
           @delete-photo="openDeleteDialog(photo)"
+          @edit-photo="openEditDialog(photo)"
         >
         </photo-item>
       </v-row>
@@ -57,6 +58,77 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+
+      <v-dialog
+        v-if="editDialog"
+        v-model="editDialog"
+        persistent
+        max-width="800"
+      >
+        <v-card>
+          <v-card-title class="text-h5">
+            Edytuj zdjęcie
+          </v-card-title>
+            <v-card-text>
+              <v-form
+                  ref="form"
+                  v-model="isEditFormValid"
+              >
+                <v-row align="center" class="my-3">
+                  <v-progress-linear
+                    v-if="isLoadingTags"
+                    indeterminate
+                    color="green"
+                  ></v-progress-linear>
+
+                  <v-checkbox
+                    v-for="tag in allEditTags"
+                    :key="tag.id"
+                    v-model="allEditSelectedTags"
+                    :label="tag.name"
+                    color="indigo"
+                    :value="tag.id"
+                    hide-details
+                    class="ml-3"
+                  ></v-checkbox>
+                </v-row>
+                  <v-text-field
+                      v-model="editVm.title"
+                      required
+                      :counter="15"
+                      :rules="titleRules"
+                      autofocus
+                  >
+                  </v-text-field>
+                  <v-text-field
+                      v-model="editVm.description"
+                      :counter="30"
+                      :rules="descriptionRules"
+                  >
+                  </v-text-field>
+                  <div class="d-flex justify-end my-4">
+                    <v-btn
+                        color="error"
+                        outlined
+                        @click="closeEditDialog()"
+                    >
+                        anuluj
+                    </v-btn>
+                    <v-btn
+                      color="success"
+                      outlined
+                      class="ml-3"
+                      @click="changePhotoDetails()"
+                      :disabled="!isEditFormValid"
+                      :loading="isEditingPhoto"
+                      >
+                      zapisz
+                    </v-btn>
+                  </div>
+              </v-form>
+            </v-card-text>
+          </v-card>
+      </v-dialog>
     </v-container>
 </template>
 
@@ -69,10 +141,25 @@ export default {
       return {
         photos: [],
         isLoadingPhotos: true,
-
-        isDeletingPhoto: false,
+        
         deleteDialog: false,
+        isDeletingPhoto: false,
         deleteVm: null,
+
+        editDialog: false,
+        isEditingPhoto: false,
+        editVm: null,
+        isEditFormValid: false,
+        allEditTags: [],
+        allEditSelectedTags: [],
+        isLoadingTags:false,
+        titleRules: [
+          v => !!v || 'Pole wymagane',
+          v => (v.length>=2 && v.length<=15) || '2-15 znaków'
+        ],
+        descriptionRules: [
+          v => (v.length<=30) || 'max 30 znaków'
+        ],
       }
     },
     methods: {
@@ -120,6 +207,31 @@ export default {
       closeDeleteDialog(){
         this.deleteDialog = false
         this.deleteVm = null
+      },
+      openEditDialog(photo){
+        this.editVm = {...photo}
+        this.isLoadingTags = true
+        this.getTags()
+        this.editDialog = true
+      },
+      closeEditDialog(){
+        this.editDialog = false
+        this.editVm = null
+      },
+      async getTags(){
+        const response = await this.$http.get('Tags/GetAll').catch((response)=>{response})
+
+        if(response && response.data.status){
+          this.allEditTags = response.data.data
+          this.checkCheckboxesWithCurrentTags()
+        }
+
+        this.isLoadingTags = false
+      },
+      checkCheckboxesWithCurrentTags(){
+          for(var photoTag of this.editVm.tags){
+            this.allEditSelectedTags.push(photoTag.id)
+          }
       }
     },
     computed: {
@@ -133,5 +245,5 @@ export default {
     components: {
       'photo-item': PhotoItem
     }
-}
+  }
 </script>

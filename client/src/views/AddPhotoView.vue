@@ -64,12 +64,15 @@
 
             <p class="red--text accent-3" :style="{display: (isAllTagsLoadingFailed?'block':'none')}">błąd wczytywania tagów :/</p>
 
-            <v-checkbox v-for="tag in allTags" v-bind:key="tag.id"
-              v-model="photoVm.tags"
-              :label="tag.name"
-              color="purple"
-              :value="tag.id"
-            ></v-checkbox>
+            <v-row align="center">
+              <v-checkbox v-for="tag in allTags" v-bind:key="tag.id"
+                v-model="photoVm.tags"
+                :label="tag.name"
+                color="purple"
+                :value="tag.id"
+                class="mx-3"
+              ></v-checkbox>
+            </v-row>
 
             <v-btn
               color="success"
@@ -77,6 +80,7 @@
               @click="savePhoto()"
               :loading="isSubmitBtnLoaderActive"
               :disabled="!valid"
+              class="my-3"
             >
               Zapisz
             </v-btn>
@@ -112,7 +116,7 @@ export default {
           v => (v.length>=2 && v.length<=15) || '2-15 znaków'
         ],
         descriptionRules: [
-          v => (v.length<=30) || 'mniej niż 30 znaków'
+          v => (v.length<=30) || 'max 30 znaków'
         ],
         fileRules: [
           v => !!v || 'Zdjęcie jest wymagane',

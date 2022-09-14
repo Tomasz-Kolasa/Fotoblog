@@ -24,6 +24,7 @@
     >
         <options-bar
             @delete-photo="$emit('delete-photo')"
+            @edit-photo="$emit('edit-photo')"
         ></options-bar>
         <template v-slot:placeholder>
             <v-row
