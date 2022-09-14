@@ -74,7 +74,38 @@
                   ref="form"
                   v-model="isEditFormValid"
               >
-                <v-row align="center" class="my-3">
+              
+                <div>
+                  <v-menu
+                    ref="menu"
+                    v-model="menu"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="editVm.createdAt"
+                        label="Data dodania"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
+                      v-model="editVm.createdAt"
+                      :active-picker.sync="activePicker"
+                      :max="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)"
+                      min="1981-01-01"
+                      @change="save"
+                    ></v-date-picker>
+                  </v-menu>
+                </div>
+
+                <div class="d-flex align-center mb-10">
+                  <span class="align-self-end">Tagi:</span>
                   <v-progress-linear
                     v-if="isLoadingTags"
                     indeterminate
@@ -91,9 +122,10 @@
                     hide-details
                     class="ml-3"
                   ></v-checkbox>
-                </v-row>
+                </div>
                   <v-text-field
                       v-model="editVm.title"
+                      label="Tytuł"
                       required
                       :counter="15"
                       :rules="titleRules"
@@ -102,6 +134,7 @@
                   </v-text-field>
                   <v-text-field
                       v-model="editVm.description"
+                      label="Opis"
                       :counter="30"
                       :rules="descriptionRules"
                   >
@@ -160,9 +193,20 @@ export default {
         descriptionRules: [
           v => (v.length<=30) || 'max 30 znaków'
         ],
+        activePicker: null,
+        date: null,
+        menu: false,
       }
     },
+    watch: {
+      menu (val) {
+        val && setTimeout(() => (this.activePicker = 'YEAR'))
+      },
+    },
     methods: {
+      save (date) {
+        this.$refs.menu.save(date)
+      },
       async getAllPhotos(){
         const response = await this.$http.get('Photos/GetAll').catch((response)=>{response})
 
@@ -210,6 +254,7 @@ export default {
       },
       openEditDialog(photo){
         this.editVm = {...photo}
+        this.editVm.createdAt = this.editVm.createdAt.substr(0,10); // need correct date format for v-model in date picker
         this.isLoadingTags = true
         this.getTags()
         this.editDialog = true

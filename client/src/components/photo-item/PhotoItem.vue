@@ -18,7 +18,6 @@
     </div>
     <v-img
     :src="$http.defaults.baseURL + photo.thumbnailUrl"
-    lazy-src="https://picsum.photos/600/338?grayscale?blur=8"
     :aspect-ratio="16/9"
     class="grey lighten-2"
     >

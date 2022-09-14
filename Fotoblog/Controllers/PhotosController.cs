@@ -1,5 +1,6 @@
 ﻿using Fotoblog.BLL.Services.PhotosService;
 using Fotoblog.Utils.ViewModels.Photos;
+using Fotoblog.Utils.ViewModels.Tags;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,5 +43,12 @@ namespace Fotoblog.Controllers
             var result = await _photoService.Delete(id);
             return FromResult(result);
         }
+
+        //[HttpPut]
+        //public async Task<IActionResult> Update([FromBody] UpdateTagVm updateTag)
+        //{
+        //    var result = await _photoService.Update(updateTag);
+        //    return FromResult(result);
+        //}
     }
 }
