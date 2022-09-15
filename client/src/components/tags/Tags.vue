@@ -81,6 +81,7 @@
             <v-form
                 ref="form"
                 v-model="isEditFormValid"
+                :disabled="isEditTagBtnLoaderActive"
             >
                 <v-text-field
                     v-model="editVm.name"

@@ -23,7 +23,7 @@
           :key="photo.id"
           :photo="photo"
           @delete-photo="openDeleteDialog(photo)"
-          @edit-photo="openEditDialog(photo)"
+          @edit-photo="openUpdateDialog(photo)"
         >
         </photo-item>
       </v-row>
@@ -51,7 +51,7 @@
               color="error"
               outlined
               :loading="isDeletingPhoto"
-              @click="deletePhoto(deleteVm.id)"
+              @click="deletePhoto()"
             >
               Tak
             </v-btn>
@@ -60,8 +60,8 @@
       </v-dialog>
 
       <v-dialog
-        v-if="editDialog"
-        v-model="editDialog"
+        v-if="updateDialog"
+        v-model="updateDialog"
         persistent
         max-width="800"
       >
@@ -72,7 +72,8 @@
             <v-card-text>
               <v-form
                   ref="form"
-                  v-model="isEditFormValid"
+                  v-model="isUpdateFormValid"
+                  :disabled="isUpdatingPhoto"
               >
               
                 <div>
@@ -86,7 +87,7 @@
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
-                        v-model="editVm.createdAt"
+                        v-model="updateVm.createdAt"
                         label="Data dodania"
                         prepend-icon="mdi-calendar"
                         readonly
@@ -95,7 +96,7 @@
                       ></v-text-field>
                     </template>
                     <v-date-picker
-                      v-model="editVm.createdAt"
+                      v-model="updateVm.createdAt"
                       :active-picker.sync="activePicker"
                       :max="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)"
                       min="1981-01-01"
@@ -113,18 +114,18 @@
                   ></v-progress-linear>
 
                   <v-checkbox
-                    v-for="tag in allEditTags"
+                    v-for="tag in allUpdateTags"
                     :key="tag.id"
-                    v-model="allEditSelectedTags"
+                    v-model="updateVm.tags"
                     :label="tag.name"
                     color="indigo"
-                    :value="tag.id"
+                    :value="tag"
                     hide-details
                     class="ml-3"
                   ></v-checkbox>
                 </div>
                   <v-text-field
-                      v-model="editVm.title"
+                      v-model="updateVm.title"
                       label="Tytuł"
                       required
                       :counter="15"
@@ -133,7 +134,7 @@
                   >
                   </v-text-field>
                   <v-text-field
-                      v-model="editVm.description"
+                      v-model="updateVm.description"
                       label="Opis"
                       :counter="30"
                       :rules="descriptionRules"
@@ -143,7 +144,7 @@
                     <v-btn
                         color="error"
                         outlined
-                        @click="closeEditDialog()"
+                        @click="closeUpdateDialog()"
                     >
                         anuluj
                     </v-btn>
@@ -151,9 +152,9 @@
                       color="success"
                       outlined
                       class="ml-3"
-                      @click="changePhotoDetails()"
-                      :disabled="!isEditFormValid"
-                      :loading="isEditingPhoto"
+                      @click="updatePhoto()"
+                      :disabled="!isUpdateFormValid"
+                      :loading="isUpdatingPhoto"
                       >
                       zapisz
                     </v-btn>
@@ -179,12 +180,11 @@ export default {
         isDeletingPhoto: false,
         deleteVm: null,
 
-        editDialog: false,
-        isEditingPhoto: false,
-        editVm: null,
-        isEditFormValid: false,
-        allEditTags: [],
-        allEditSelectedTags: [],
+        updateDialog: false,
+        isUpdatingPhoto: false,
+        updateVm: null,
+        isUpdateFormValid: false,
+        allUpdateTags: [],
         isLoadingTags:false,
         titleRules: [
           v => !!v || 'Pole wymagane',
@@ -218,31 +218,60 @@ export default {
       removePhoto(id){
         this.photos = this.photos.filter(p => p.id != id)
       },
-      async deletePhoto(id){
+      async deletePhoto(){
         this.isDeletingPhoto = true
 
         const self = this
         
-        const response = await this.$http.delete('photos/delete?id='+id)
+        const response = await this.$http.delete('photos/delete?id='+this.deleteVm.id)
             .catch(function (response) {
                 if(response && response.data)
                 {
                     var errorCode = response.data.errorCode
                     if(30 == errorCode) // photo not exists
                     {
-                        self.removePhoto(id)
+                        self.removePhoto(self.deleteVm.id)
                     }
                 }
             })
 
         if(response && response.data.status)
         {
-          this.removePhoto(id)
+          this.removePhoto(this.deleteVm.id)
           this.$toast.success("Zdjęcie zostało usunięte.")
         }
         
         this.isDeletingPhoto = false
         this.deleteDialog = false
+      },
+      async updatePhoto(){
+
+        this.isUpdatingPhoto = true
+
+        const self = this
+        
+        const response = await this.$http.put('photos/Update', this.updateVm)
+            .catch(function (response) {
+                if(response && response.data)
+                {
+                    var errorCode = response.data.errorCode
+                    if(30 == errorCode) // photo not exists
+                    {
+                        self.removePhoto(self.updateVm.id)
+                    }
+                }
+            })
+
+        if(response && response.data.status)
+        {
+          var index = this.photos.findIndex((e)=>{ return e.id == this.updateVm.id})
+          this.photos[index] = JSON.parse(JSON.stringify(this.updateVm))
+
+          this.$toast.success("Załatwione.")
+        }
+        
+        this.isUpdatingPhoto = false
+        this.closeUpdateDialog()
       },
       openDeleteDialog(photo){
         this.deleteVm = photo
@@ -252,31 +281,27 @@ export default {
         this.deleteDialog = false
         this.deleteVm = null
       },
-      openEditDialog(photo){
-        this.editVm = {...photo}
-        this.editVm.createdAt = this.editVm.createdAt.substr(0,10); // need correct date format for v-model in date picker
+      openUpdateDialog(photo){
+        this.updateVm = JSON.parse(JSON.stringify(photo))
+        this.updateVm.description = (this.updateVm.description) ? this.updateVm.description : ""
+        this.updateVm.createdAt = this.updateVm.createdAt.substr(0,10); // need correct date format for v-model in date picker
         this.isLoadingTags = true
         this.getTags()
-        this.editDialog = true
+        this.updateDialog = true
       },
-      closeEditDialog(){
-        this.editDialog = false
-        this.editVm = null
+      closeUpdateDialog(){
+        this.updateDialog = false
+        this.updateVm = null
+        this.allUpdateTags = []
       },
       async getTags(){
         const response = await this.$http.get('Tags/GetAll').catch((response)=>{response})
 
         if(response && response.data.status){
-          this.allEditTags = response.data.data
-          this.checkCheckboxesWithCurrentTags()
+          this.allUpdateTags = response.data.data
         }
 
         this.isLoadingTags = false
-      },
-      checkCheckboxesWithCurrentTags(){
-          for(var photoTag of this.editVm.tags){
-            this.allEditSelectedTags.push(photoTag.id)
-          }
       }
     },
     computed: {

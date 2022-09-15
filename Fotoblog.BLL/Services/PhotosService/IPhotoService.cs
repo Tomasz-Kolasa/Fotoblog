@@ -11,5 +11,6 @@ namespace Fotoblog.BLL.Services.PhotosService
 
         Task<ServiceResult<List<PhotoVm>>> GetAll();
         Task<ServiceResult> Delete(int id);
+        Task<ServiceResult> Update(PhotoVm updatePhotoVm);
     }
 }

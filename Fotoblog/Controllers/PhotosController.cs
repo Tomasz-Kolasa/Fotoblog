@@ -44,11 +44,11 @@ namespace Fotoblog.Controllers
             return FromResult(result);
         }
 
-        //[HttpPut]
-        //public async Task<IActionResult> Update([FromBody] UpdateTagVm updateTag)
-        //{
-        //    var result = await _photoService.Update(updateTag);
-        //    return FromResult(result);
-        //}
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] PhotoVm updatePhoto)
+        {
+            var result = await _photoService.Update(updatePhoto);
+            return FromResult(result);
+        }
     }
 }

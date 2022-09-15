@@ -12,6 +12,7 @@ using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
+using System.Linq;
 using System.Net;
 
 namespace Fotoblog.BLL.Services.PhotosService
@@ -54,6 +55,39 @@ namespace Fotoblog.BLL.Services.PhotosService
             _saveLocationRelative = Path.Combine(
                photosSaveFolder, uniquePhotoFolderName
                 );
+        }
+
+        public async Task<ServiceResult> Update(PhotoVm updatePhotoVm)
+        {
+            var photoEntity = await _dbContext.PhotoEntities.Include(x => x.Tags)
+                .FirstOrDefaultAsync(p => p.Id == updatePhotoVm.Id);
+
+            if (photoEntity == null)
+            {
+                return ServiceResult.Fail(ErrorCodes.PhotoNotExists);
+            }
+
+            // remove existing tags, so there won't be duplicate keys on update entity
+            var vmTagsIds = new List<int>();
+            foreach (var tag in updatePhotoVm.Tags)
+            {
+                vmTagsIds.Add(tag.Id);
+            }
+            foreach (var tag in photoEntity.Tags.ToList())
+            {
+                photoEntity.Tags.Remove(tag);
+            }
+
+            var tagsToAppend = _dbContext.TagEntities.Where(x => vmTagsIds.Contains(x.Id));
+            photoEntity.Tags.AddRange(tagsToAppend);
+
+            photoEntity.Title = updatePhotoVm.Title;
+            photoEntity.Description = updatePhotoVm.Description;
+            photoEntity.CreatedAt = updatePhotoVm.CreatedAt;
+
+            await _dbContext.SaveChangesAsync();
+
+            return ServiceResult.Ok();
         }
 
         public async Task<ServiceResult> Delete(int id)
