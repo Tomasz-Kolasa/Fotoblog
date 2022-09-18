@@ -2,14 +2,15 @@
     <v-container>
       <v-row>
         <v-col>
-          <h1>Dodaj zdjęcie</h1>
+          <h1 class="text.h4">Dodaj zdjęcie</h1>
         </v-col>
       </v-row>
       <v-row>
         <v-col>
-          <div style="width: 100%">
+          <div>
             <v-img
               :src="previewSrc"
+              :aspect-ratio="16/9"
               alt="Podgląd dodawanego zdjęcia"
               max-width="100%"
               contain
@@ -19,6 +20,7 @@
               v-model="uploadProgress"
               height="25"
               color="amber"
+              class="my-5"
               :active="isProgressBar"
             >
               <strong>{{ Math.ceil(uploadProgress) }}%</strong>
@@ -34,9 +36,11 @@
           >
             <v-file-input
               ref="fileupload"
+              v-model="file"
               required
               :rules="fileRules"
               @change="setPreview"
+              @click:clear="clearPreview"
               accept="image/*"
               label="Wybierz zdjęcie">
             </v-file-input>
@@ -92,7 +96,6 @@
 
 <script>
 import placeholderImage from '@/assets/1.png'
-import {plcImg} from '@/utils/placeholder.js'
 
 export default {
     name: "AddPhotoView",
@@ -107,6 +110,7 @@ export default {
         allTags: [],
         isAllTagsLoadingFailed: false,
         isLoadingTags: true,
+        file: undefined,
         previewSrc: placeholderImage,
         isSubmitBtnLoaderActive: false,
         isProgressBar: false,
@@ -166,7 +170,7 @@ export default {
             this.photoVm.description = ''
             this.photoVm.tags = []
             this.$refs.fileupload.reset()
-            this.previewSrc = plcImg
+            this.previewSrc = placeholderImage
             this.$refs.form.resetValidation()
             this.$toast.success('Sukces!')
             // this.$router.go()
@@ -176,8 +180,12 @@ export default {
         this.isProgressBar = false
 
       },
+      clearPreview(){
+        this.previewSrc = placeholderImage
+      },
       setPreview(){
-        this.previewSrc = plcImg
+        if(! this.file) return
+        
         const file = document.querySelector('input[type=file]').files[0];
         const reader = new FileReader();
 

@@ -1,34 +1,23 @@
 <template>
   <div>
-    <v-container>
-      <v-row>
-        <v-col>
-          <nav>
-            <router-link to="/" class="mr-3">Home</router-link>
-            <router-link to="/manage-tags" class="mr-3">Tagi</router-link>
-            <router-link to="/add-photo">Dodaj zdjęcie</router-link>
-          </nav>
-        </v-col>
-      </v-row>
-    </v-container>
     <v-main>
       <v-container>
         <v-row>
           <v-col>
-            <h1>Fotoblog</h1>
+            <h1 class="my-8 text-h3 text-center">Fotoblog</h1>
+            <v-divider></v-divider>
           </v-col>
         </v-row>
       </v-container>
       <router-view /> <!-- template expanded here -->
     </v-main>
-    <v-footer>
-      <v-container>
-        <v-row>
-          <v-col>
-            footer
-          </v-col>
-        </v-row>
-      </v-container>
+    <v-footer color="white" :app="true" :absolute="true">
+      <v-col class="text-center">
+        <v-divider></v-divider>
+        <div class="my-8">
+          {{ new Date().getFullYear() }} — Fotoblog
+        </div>
+      </v-col>
     </v-footer>
   </div>
 </template>
