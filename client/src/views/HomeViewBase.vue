@@ -4,7 +4,7 @@
       <v-container>
         <v-row>
           <v-col>
-            <h1 class="my-8 text-h3 text-center">Fotoblog</h1>
+            <h1 class="my-8 text-h4 text-center">Fotoblog</h1>
             <v-divider></v-divider>
           </v-col>
         </v-row>

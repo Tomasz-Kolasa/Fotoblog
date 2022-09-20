@@ -1,7 +1,7 @@
 <template>
 <v-col
     class="d-flex child-flex flex-column mt-3"
-    cols="6"
+    :cols="$vuetify.breakpoint.name == 'xs'|| $vuetify.breakpoint.name =='sm' ? 12 : 6"
 >
     <div class="d-flex justify-space-between mb-2 text-subtitle-2">
         <div>
