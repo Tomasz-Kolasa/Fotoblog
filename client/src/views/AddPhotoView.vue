@@ -2,7 +2,7 @@
     <v-container>
       <v-row>
         <v-col>
-          <h1 class="text.h4">Dodaj zdjęcie</h1>
+          <h2 class="text-h5">Dodaj zdjęcie</h2>
         </v-col>
       </v-row>
       <v-row>
