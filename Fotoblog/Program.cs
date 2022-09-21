@@ -1,3 +1,4 @@
+using Fotoblog.BLL.Services.AuthService;
 using Fotoblog.BLL.Services.PhotosService;
 using Fotoblog.BLL.Services.TagService;
 using Fotoblog.DAL;
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(x => x.UseSqlServer(builder.
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 

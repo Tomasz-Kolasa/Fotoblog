@@ -11,7 +11,7 @@
       </v-container>
       <router-view /> <!-- template expanded here -->
     </v-main>
-    <v-footer color="white" :app="true" :absolute="true">
+    <v-footer color="white" app absolute>
       <v-col class="text-center">
         <v-divider></v-divider>
         <div class="my-8">

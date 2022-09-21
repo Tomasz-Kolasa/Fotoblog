@@ -12,6 +12,9 @@
         FileLengthZero = 21,
         CouldNotSaveTheFile =22,
         // photo delete
-        PhotoNotExists = 30
+        PhotoNotExists = 30,
+
+        // authentication
+        BadCredentials = 40
     }
 }
