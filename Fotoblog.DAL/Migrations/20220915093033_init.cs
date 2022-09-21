@@ -5,24 +5,43 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Fotoblog.DAL.Migrations
 {
-    public partial class photos : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "PhotoEntity",
+                name: "PhotoEntities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Path = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Extension = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OriginalUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ThumbnailUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PhotoEntity", x => x.Id);
+                    table.PrimaryKey("PK_PhotoEntities", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TagEntities",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TagEntities", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -36,9 +55,9 @@ namespace Fotoblog.DAL.Migrations
                 {
                     table.PrimaryKey("PK_PhotosTags", x => new { x.PhotosId, x.TagsId });
                     table.ForeignKey(
-                        name: "FK_PhotosTags_PhotoEntity_PhotosId",
+                        name: "FK_PhotosTags_PhotoEntities_PhotosId",
                         column: x => x.PhotosId,
-                        principalTable: "PhotoEntity",
+                        principalTable: "PhotoEntities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -61,7 +80,10 @@ namespace Fotoblog.DAL.Migrations
                 name: "PhotosTags");
 
             migrationBuilder.DropTable(
-                name: "PhotoEntity");
+                name: "PhotoEntities");
+
+            migrationBuilder.DropTable(
+                name: "TagEntities");
         }
     }
 }

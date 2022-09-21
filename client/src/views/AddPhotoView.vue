@@ -2,14 +2,15 @@
     <v-container>
       <v-row>
         <v-col>
-          <h1>Dodaj zdjęcie</h1>
+          <h2 class="text-h5">Dodaj zdjęcie</h2>
         </v-col>
       </v-row>
       <v-row>
         <v-col>
-          <div style="width: 100%">
+          <div>
             <v-img
               :src="previewSrc"
+              :aspect-ratio="16/9"
               alt="Podgląd dodawanego zdjęcia"
               max-width="100%"
               contain
@@ -19,6 +20,7 @@
               v-model="uploadProgress"
               height="25"
               color="amber"
+              class="my-5"
               :active="isProgressBar"
             >
               <strong>{{ Math.ceil(uploadProgress) }}%</strong>
@@ -34,9 +36,11 @@
           >
             <v-file-input
               ref="fileupload"
+              v-model="file"
               required
               :rules="fileRules"
               @change="setPreview"
+              @click:clear="clearPreview"
               accept="image/*"
               label="Wybierz zdjęcie">
             </v-file-input>
@@ -64,12 +68,15 @@
 
             <p class="red--text accent-3" :style="{display: (isAllTagsLoadingFailed?'block':'none')}">błąd wczytywania tagów :/</p>
 
-            <v-checkbox v-for="tag in allTags" v-bind:key="tag.id"
-              v-model="photoVm.tags"
-              :label="tag.name"
-              color="purple"
-              :value="tag.id"
-            ></v-checkbox>
+            <v-row align="center">
+              <v-checkbox v-for="tag in allTags" v-bind:key="tag.id"
+                v-model="photoVm.tags"
+                :label="tag.name"
+                color="purple"
+                :value="tag.id"
+                class="mx-3"
+              ></v-checkbox>
+            </v-row>
 
             <v-btn
               color="success"
@@ -77,6 +84,7 @@
               @click="savePhoto()"
               :loading="isSubmitBtnLoaderActive"
               :disabled="!valid"
+              class="my-3"
             >
               Zapisz
             </v-btn>
@@ -88,7 +96,6 @@
 
 <script>
 import placeholderImage from '@/assets/1.png'
-import {plcImg} from '@/utils/placeholder.js'
 
 export default {
     name: "AddPhotoView",
@@ -103,6 +110,7 @@ export default {
         allTags: [],
         isAllTagsLoadingFailed: false,
         isLoadingTags: true,
+        file: undefined,
         previewSrc: placeholderImage,
         isSubmitBtnLoaderActive: false,
         isProgressBar: false,
@@ -112,7 +120,7 @@ export default {
           v => (v.length>=2 && v.length<=15) || '2-15 znaków'
         ],
         descriptionRules: [
-          v => (v.length<=15) || 'mniej niż 30 znaków'
+          v => (v.length<=30) || 'max 30 znaków'
         ],
         fileRules: [
           v => !!v || 'Zdjęcie jest wymagane',
@@ -155,14 +163,14 @@ export default {
                 }
             }
           }
-        )
+        ).catch((response)=>{response})
 
         if(response && response.data.status){
             this.photoVm.title = ''
             this.photoVm.description = ''
             this.photoVm.tags = []
             this.$refs.fileupload.reset()
-            this.previewSrc = plcImg
+            this.previewSrc = placeholderImage
             this.$refs.form.resetValidation()
             this.$toast.success('Sukces!')
             // this.$router.go()
@@ -172,8 +180,12 @@ export default {
         this.isProgressBar = false
 
       },
+      clearPreview(){
+        this.previewSrc = placeholderImage
+      },
       setPreview(){
-        this.previewSrc = plcImg
+        if(! this.file) return
+        
         const file = document.querySelector('input[type=file]').files[0];
         const reader = new FileReader();
 
@@ -188,7 +200,7 @@ export default {
         }
       },
       async getTags(){
-        const response = await this.$http.get('Tags/GetAll')
+        const response = await this.$http.get('Tags/GetAll').catch((response)=>{response})
 
         if(response && response.data.status){
           this.allTags = response.data.data

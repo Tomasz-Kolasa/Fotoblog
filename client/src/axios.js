@@ -18,9 +18,22 @@ Axios.interceptors.response.use(response => response, error => {
               break;
             case 11:
               Vue.$toast.error("Tag nie istnieje.")
+              break;
+            case 20:
+              Vue.$toast.error("Niedozwolone rozszerzenie pliku.")
+              break; 
+            case 21:
+              Vue.$toast.error("Przesłany plik jest pusty.")
+              break; 
+            case 22:
+              Vue.$toast.error("Nie udało się zapisać pliku.")
+              break; 
+            case 30:
+              Vue.$toast.warning("Zdjęcie zostało usunięte wcześniej w innej przeglądarce.")
               break; 
             default:
-              Vue.$toast.error("Axios response interceptor - response error code: "+error.response.data.errorCode)
+              Vue.$toast.error("Wystąpił nieoczekiwany błąd.")
+              console.log(`TBD handle err code!!: Axios response interceptor - response error code: ${error.response.data.errorCode}`)
               break;  
           }
         } else {
@@ -40,7 +53,7 @@ Axios.interceptors.response.use(response => response, error => {
   else{
     Vue.$toast.error("Błąd sieci, przepraszamy.")
   }
-  // return Promise.reject(error)
+  return Promise.reject(error.response)
 });
 
 export default Axios;

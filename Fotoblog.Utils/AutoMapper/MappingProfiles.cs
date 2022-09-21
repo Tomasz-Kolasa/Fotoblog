@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Fotoblog.DAL.Entities;
+using Fotoblog.Utils.ViewModels.Photos;
 using Fotoblog.Utils.ViewModels.Tags;
 
 namespace Fotoblog.Utils.AutoMapper
@@ -11,6 +12,7 @@ namespace Fotoblog.Utils.AutoMapper
             CreateMap<UpdateTagVm, TagEntity>().ReverseMap();
             CreateMap<TagVm, TagEntity>().ReverseMap();
             CreateMap<NewTagVm, TagEntity>().ReverseMap();
+            CreateMap<PhotoEntity, PhotoVm>().ReverseMap();
         }
     }
 }

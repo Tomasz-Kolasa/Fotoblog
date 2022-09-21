@@ -10,6 +10,8 @@
         // photo upload
         FileExtensionNotAllowed = 20,
         FileLengthZero = 21,
-        CouldNotSaveTheFile =22
+        CouldNotSaveTheFile =22,
+        // photo delete
+        PhotoNotExists = 30
     }
 }
