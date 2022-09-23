@@ -1,9 +1,11 @@
 ﻿using Fotoblog.BLL.Services.TagService;
 using Fotoblog.Utils.ViewModels.Tags;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fotoblog.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class TagsController : BaseController
     {
         private readonly ITagService _tagService;
@@ -25,7 +27,7 @@ namespace Fotoblog.Controllers
             return FromResult(result);
         }
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
             var result = await _tagService.GetAll();

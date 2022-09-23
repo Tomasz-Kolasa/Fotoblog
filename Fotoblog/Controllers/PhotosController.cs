@@ -1,11 +1,13 @@
 ﻿using Fotoblog.BLL.Services.PhotosService;
 using Fotoblog.Utils.ViewModels.Photos;
 using Fotoblog.Utils.ViewModels.Tags;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fotoblog.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class PhotosController : BaseController
     {
         private readonly IPhotoService _photoService;
@@ -30,7 +32,7 @@ namespace Fotoblog.Controllers
             return FromResult(result);
         }
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
             var result = await _photoService.GetAll();

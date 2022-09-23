@@ -5,6 +5,6 @@ namespace Fotoblog.BLL.Services.AuthService
 {
     public interface IAuthService
     {
-        Task<ServiceResult> Login(LoginUserVm loginUserVm);
+        Task<ServiceResult<string>> Login(LoginUserVm loginUserVm);
     }
 }

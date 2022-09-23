@@ -44,6 +44,14 @@ Axios.interceptors.response.use(response => response, error => {
           console.log(error.response.data.errors)
         }
     }
+    else if(error.response.status == 401)
+    {
+      Vue.$toast.error("Odmowa dostępu.")
+    }
+    else if(error.response.status == 403)
+    {
+      Vue.$toast.error("Brak uprawnień.")
+    }
     else if (error.request) {
       Vue.$toast.error("Brak odpowiedzi z serwera, przepraszamy")
     } else {
