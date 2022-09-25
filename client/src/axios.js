@@ -31,6 +31,9 @@ Axios.interceptors.response.use(response => response, error => {
             case 30:
               Vue.$toast.warning("Zdjęcie zostało usunięte wcześniej w innej przeglądarce.")
               break; 
+            case 40:
+                Vue.$toast.error("Nieprawidłowe dane logowania.")
+                break; 
             default:
               Vue.$toast.error("Wystąpił nieoczekiwany błąd.")
               console.log(`TBD handle err code!!: Axios response interceptor - response error code: ${error.response.data.errorCode}`)

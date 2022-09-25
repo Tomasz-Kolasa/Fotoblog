@@ -22,6 +22,7 @@
     class="grey lighten-2"
     >
         <options-bar
+            v-if="user.isLoggedIn"
             @delete-photo="$emit('delete-photo')"
             @edit-photo="$emit('edit-photo')"
         ></options-bar>
@@ -44,10 +45,16 @@
 </template>
 <script>
     import OptionsBar from '@/components/photo-item/OptionsBar.vue'
+    import { useUserStore } from '@/pinia/stores/useUserStore';
 
     export default {
         name: 'photo-item',
         props:['photo'],
-        components: { 'options-bar': OptionsBar}
+        components: { 'options-bar': OptionsBar},
+        data(){
+            return {
+                user: useUserStore()
+            }
+        }
     }
 </script>

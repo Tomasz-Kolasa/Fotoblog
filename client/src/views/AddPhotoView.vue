@@ -96,9 +96,18 @@
 
 <script>
 import placeholderImage from '@/assets/1.png'
+import {useUserStore} from '@/pinia/stores/useUserStore'
 
 export default {
     name: "AddPhotoView",
+    beforeRouteEnter: (to, from, next)=>{
+      var user = useUserStore()
+      if(!user.isLoggedIn)
+      {
+        next({name:'LoginView'})
+      }
+      next()
+    },
     data() {
       return {
         valid: false,

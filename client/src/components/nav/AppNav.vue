@@ -47,7 +47,7 @@
                   
                   >
                     <v-icon>{{navItem.icon}}</v-icon>
-                  </v-btn>
+                </v-btn>
               </v-list-item-content>
             </v-list-item>
         </v-list>
@@ -56,26 +56,28 @@
 </template>
 
 <script>
+  import {useUserStore} from "@/pinia/stores/useUserStore"
+  import {navigationItems} from './nav-items.js'
+
     export default {
       name: 'AppNav',
       data () {
         return {
-          navItems: [
-            { title: 'Home', icon: 'mdi-home', target: '/' },
-            { title: 'Tagi', icon: 'mdi-tag-multiple', target: '/manage-tags' },
-            { title: 'Dodaj', icon: 'mdi-upload', target: '/add-photo' },
-            { title: 'Zaloguj', icon: 'mdi-account', target: '/login' },
-            { title: 'Wyloguj', icon: 'mdi-logout', target: '/logout' },
-          ],
           drawer: false,
-          isToBeClosed: false
+          isToBeClosed: false,
+          user: useUserStore(),
         }
       },
       computed:{
         isDrawer: function(){
           if(this.$vuetify.breakpoint.name == 'xs' && this.drawer) return true
           return false
+        },
+        navItems: function(){
+          return navigationItems.filter(x => x.showAnonymus || this.user.isLoggedIn)
         }
+      },
+      mounted(){
       }
     }
   </script>

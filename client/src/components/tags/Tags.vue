@@ -199,7 +199,7 @@
         addVm: null,
         isAddFormValid: false,
 
-        tableLoading: false
+        tableLoading: false,
       }
     },
     methods: {

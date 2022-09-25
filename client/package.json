@@ -12,6 +12,7 @@
     "@mdi/js": "^7.0.96",
     "axios": "^0.27.2",
     "core-js": "^3.8.3",
+    "pinia": "^2.0.22",
     "vue": "^2.6.14",
     "vue-router": "^3.5.1",
     "vue-toast-notification": "^0.6.3",
