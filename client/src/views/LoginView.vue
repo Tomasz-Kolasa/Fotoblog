@@ -41,7 +41,7 @@
                     :loading="isLoading"
                     class="mt-3"
                     >
-                    zapisz
+                    zaloguj
                 </v-btn>
             </v-form>
             </v-col>
