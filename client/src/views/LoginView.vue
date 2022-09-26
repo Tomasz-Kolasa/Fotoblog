@@ -50,8 +50,18 @@
 </template>
 <script>
     import { useUserStore } from '@/pinia/stores/useUserStore'
+    import Axios from 'axios'
+
     export default {
         name: 'LoginView',
+        beforeRouteEnter: (to, from, next)=>{
+        var user = useUserStore()
+        if(user.isLoggedIn)
+        {
+            next({name:'HomeView'})
+        }
+        next()
+        },
         data(){
             return{
                 loginVm:{
@@ -70,19 +80,24 @@
         },
         methods:{
             async login(){
-                this.isLoading = true
+                var self = this
 
-                const response = await this.$http.post('Auth/Login',this.loginVm).catch((response)=>response)
+                this.isLoading = true
+                const response = await this.$http.post('Auth/Login',this.loginVm).catch(
+                    (response)=>{
+                        response
+                        self.isLoading = false})
 
                 if(response && response.data.status)
                 {
-                    this.user.login(response.data.data)
+                    const token = response.data.data
+                    this.user.login(token)
+                    Axios.defaults.headers = {
+                        Authorization: `bearer ${token}`
+                    }
                     this.$toast.success("Zalogowano!.")
-                    var self = this
-                    setTimeout(function(){self.$router.push("/")}, 2000)
+                    this.$router.push("/")
                 }
-
-                this.isLoading = false
             }
         }
     }

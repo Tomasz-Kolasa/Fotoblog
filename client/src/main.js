@@ -20,6 +20,5 @@ new Vue({
   router,
   pinia,
   vuetify,
-  // Toast,
   render: h => h(App)
 }).$mount('#app')

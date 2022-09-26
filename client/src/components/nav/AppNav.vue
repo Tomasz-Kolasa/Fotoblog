@@ -8,7 +8,8 @@
         </v-app-bar-nav-icon>
 
         <v-toolbar-title>Fotoblog</v-toolbar-title>
-
+        <v-spacer class="d-none d-sm-flex"></v-spacer>
+        <span class="d-flex">{{user.name}}</span>
         <v-spacer class="d-none d-sm-flex"></v-spacer>
         
         <v-btn
@@ -74,7 +75,8 @@
           return false
         },
         navItems: function(){
-          return navigationItems.filter(x => x.showAnonymus || this.user.isLoggedIn)
+          return navigationItems.filter(
+            x => (!this.user.isLoggedIn && x.showAnonymus) || (this.user.isLoggedIn && x.showAdmin) )
         }
       },
       mounted(){

@@ -110,6 +110,7 @@ export default {
     },
     data() {
       return {
+        user: useUserStore(),
         valid: false,
         photoVm: {
           title: '',
@@ -159,7 +160,9 @@ export default {
           'Photos/AddNew',
           formData,
           {
-            headers: { "Content-Type": "multipart/form-data" },
+            headers: {
+              "Content-Type": "multipart/form-data"
+            },
             onUploadProgress: (progressEvent) => {
 
               const totalLength = progressEvent.lengthComputable ?

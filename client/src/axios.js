@@ -1,7 +1,8 @@
 import Axios from 'axios';
 import Vue from 'vue'
 
-Axios.defaults.baseURL='https://localhost:5000/api/' 
+Axios.defaults.baseURL='https://localhost:5000/api/'
+
 Vue.prototype.$http = Axios
 
 Axios.interceptors.response.use(response => response, error => {
