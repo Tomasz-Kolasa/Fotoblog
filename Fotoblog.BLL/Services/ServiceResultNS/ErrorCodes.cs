@@ -15,6 +15,7 @@
         PhotoNotExists = 30,
 
         // authentication
-        BadCredentials = 40
+        BadCredentials = 40,
+        AdminAlreadyRegistered = 41
     }
 }

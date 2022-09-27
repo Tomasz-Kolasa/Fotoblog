@@ -35,6 +35,9 @@ Axios.interceptors.response.use(response => response, error => {
             case 40:
                 Vue.$toast.error("Nieprawidłowe dane logowania.")
                 break; 
+            case 41:
+              Vue.$toast.error("Konto administratora już istnieje.")
+              break; 
             default:
               Vue.$toast.error("Wystąpił nieoczekiwany błąd.")
               console.log(`TBD handle err code!!: Axios response interceptor - response error code: ${error.response.data.errorCode}`)

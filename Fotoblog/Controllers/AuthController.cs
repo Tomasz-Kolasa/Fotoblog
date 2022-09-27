@@ -1,5 +1,6 @@
 ﻿using Fotoblog.BLL.Services.AuthService;
 using Fotoblog.Utils.ViewModels.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fotoblog.Controllers
@@ -11,6 +12,15 @@ namespace Fotoblog.Controllers
         {
             _authService = authService;
         }
+
+        [HttpPost]
+        [Authorize(Roles = "TempAdmin")]
+        public async Task<IActionResult> RegisterAdmin(RegisterAdminVm registerAdminVm)
+        {
+            var result = await _authService.RegisterAdmin(registerAdminVm);
+            return FromResult(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Login(LoginUserVm loginUserVm)
         {

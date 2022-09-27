@@ -102,7 +102,7 @@ export default {
     name: "AddPhotoView",
     beforeRouteEnter: (to, from, next)=>{
       var user = useUserStore()
-      if(!user.isLoggedIn)
+      if(!user.isAdmin)
       {
         next({name:'LoginView'})
       }

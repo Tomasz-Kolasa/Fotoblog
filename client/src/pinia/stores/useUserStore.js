@@ -9,7 +9,9 @@ export const useUserStore = defineStore('user',{
         token: null
     }),
     getters: {
-        isLoggedIn: (state) => !!state.token
+        isLoggedIn: (state) => !!state.token,
+        isAdmin: (state) => !!state.token && state.role=='Admin',
+        isTempAdmin: (state) => !!state.token && state.role=='TempAdmin'
     },
     actions: {
         login(token){

@@ -76,7 +76,7 @@
         },
         navItems: function(){
           return navigationItems.filter(
-            x => (!this.user.isLoggedIn && x.showAnonymus) || (this.user.isLoggedIn && x.showAdmin) )
+            x => (!this.user.isAdmin && x.showAnonymus) || (this.user.isAdmin && x.showAdmin) )
         }
       },
       mounted(){

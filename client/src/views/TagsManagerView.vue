@@ -15,7 +15,7 @@ export default {
     name: "TagsManagerView",
     beforeRouteEnter: (to, from, next)=>{
       var user = useUserStore()
-      if(!user.isLoggedIn)
+      if(!user.isAdmin)
       {
         next({name:'LoginView'})
       }

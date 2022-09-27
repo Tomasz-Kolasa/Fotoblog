@@ -22,7 +22,7 @@
     class="grey lighten-2"
     >
         <options-bar
-            v-if="user.isLoggedIn"
+            v-if="user.isAdmin"
             @delete-photo="$emit('delete-photo')"
             @edit-photo="$emit('edit-photo')"
         ></options-bar>
