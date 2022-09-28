@@ -1,5 +1,6 @@
 <template>
     <v-container>
+      <tags-bar @tags-selected="filterPhotos"></tags-bar>
       <v-row v-if="isLoadingPhotos">
         <v-col
         v-for="n in 12"
@@ -19,7 +20,7 @@
           <h2 class="text-h4 text-center">brak zdjęć</h2>
         </v-col>
         <photo-item
-          v-for="photo in photos"
+          v-for="photo in filteredPhotos"
           :key="photo.id"
           :photo="photo"
           @delete-photo="openDeleteDialog(photo)"
@@ -168,12 +169,14 @@
 
 <script>
 import PhotoItem from '@/components/photo-item/PhotoItem.vue'
+import TagsBar from '@/components/tags/TagsBar.vue'
 
 export default {
     name: "HomeView",
     data(){
       return {
         photos: [],
+        filteredPhotos: [],
         isLoadingPhotos: true,
         
         deleteDialog: false,
@@ -204,6 +207,33 @@ export default {
       },
     },
     methods: {
+
+
+
+      filterPhotos: function(selectedTags){
+
+        if(selectedTags.length==0){
+          this.filteredPhotos = this.photos
+        } else {
+          this.filteredPhotos = this.photos.filter( (p) => {
+            var isTagInPhoto = false
+
+            for(var i=0; i<selectedTags.length; i++)
+            { 
+              var matchedPhotoTags = p.tags.filter(t=>t.id==selectedTags[i])
+              if(matchedPhotoTags.length>0){
+                isTagInPhoto = true
+                break
+              }
+            }
+
+            return isTagInPhoto
+          })
+        }
+      },
+
+
+
       save (date) {
         this.$refs.menu.save(date)
       },
@@ -212,6 +242,7 @@ export default {
 
         if(response && response.data.status){
           this.photos = response.data.data
+          this.filteredPhotos = this.photos
         }
         this.isLoadingPhotos = false
       },
@@ -313,7 +344,8 @@ export default {
       this.getAllPhotos()
     },
     components: {
-      'photo-item': PhotoItem
+      'photo-item': PhotoItem,
+      'tags-bar': TagsBar
     }
   }
 </script>
