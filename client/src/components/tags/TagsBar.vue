@@ -21,6 +21,7 @@
             ></v-checkbox>
 
             <v-btn
+            v-if="tags.length>0"
             class="ml-5 mt-5"
             icon
             small
@@ -29,7 +30,7 @@
                 <v-icon>mdi-filter-remove-outline</v-icon>
             </v-btn>
         </v-col>
-        <v-col v-else>
+        <v-col v-else class="text-right">
             <v-progress-circular
             indeterminate
             class="mt-5"

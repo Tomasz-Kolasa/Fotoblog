@@ -1,5 +1,6 @@
 using Fotoblog.BLL.Services.AuthService;
 using Fotoblog.BLL.Services.PhotosService;
+using Fotoblog.BLL.Services.SettingsService;
 using Fotoblog.BLL.Services.TagService;
 using Fotoblog.DAL;
 using Fotoblog.Utils.AutoMapper;
@@ -35,6 +36,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => {
         options.TokenValidationParameters = new TokenValidationParameters

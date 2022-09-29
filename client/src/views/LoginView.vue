@@ -58,7 +58,7 @@
                 Ustawianie nowego konta
             </v-card-title>
             <v-card-subtitle>
-                <p class="my-3">Ustaw swój login i hasło, aby móc zarządzać swoim serwisem</p>
+                <p class="my-3">Ustaw login i hasło, aby móc zarządzać swoim serwisem</p>
             </v-card-subtitle>
             <v-card-text>
                 <v-form
@@ -66,37 +66,37 @@
                     v-model="isCredsFormValid"
                     :disabled="isCredsLoader"
                 >
-                <v-text-field
-                    v-model="credsVm.userName"
-                    placeholder="utwórz login"
-                    required
-                    :counter="20"
-                    :rules="rules"
-                    autofocus
-                >
-                </v-text-field>
-                <v-text-field
-                    v-model="credsVm.password"
-                    placeholder="utwórz hasło"
-                    :append-icon="isShowCredsPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                    required
-                    :type="isShowCredsPassword?'text':'password'"
-                    :counter="20"
-                    :rules="rules"
-                    @click:append="isShowCredsPassword = !isShowCredsPassword"
-                >
-                </v-text-field>
-                <v-text-field
-                    v-model="credsVm.confirmPassword"
-                    placeholder="powtórz hasło"
-                    :append-icon="isShowCredsPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                    required
-                    :type="isShowCredsPassword?'text':'password'"
-                    :counter="20"
-                    :rules="confirmPwdRules"
-                    @click:append="isShowCredsPassword = !isShowCredsPassword"
-                >
-                </v-text-field>
+                    <v-text-field
+                        v-model="credsVm.userName"
+                        placeholder="utwórz login"
+                        required
+                        :counter="20"
+                        :rules="rules"
+                        autofocus
+                    >
+                    </v-text-field>
+                    <v-text-field
+                        v-model="credsVm.password"
+                        placeholder="utwórz hasło"
+                        :append-icon="isShowCredsPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                        required
+                        :type="isShowCredsPassword?'text':'password'"
+                        :counter="20"
+                        :rules="rules"
+                        @click:append="isShowCredsPassword = !isShowCredsPassword"
+                    >
+                    </v-text-field>
+                    <v-text-field
+                        v-model="credsVm.confirmPassword"
+                        placeholder="powtórz hasło"
+                        :append-icon="isShowCredsPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                        required
+                        :type="isShowCredsPassword?'text':'password'"
+                        :counter="20"
+                        :rules="confirmPwdRules"
+                        @click:append="isShowCredsPassword = !isShowCredsPassword"
+                    >
+                    </v-text-field>
                     <v-btn
                         color="success"
                         outlined
