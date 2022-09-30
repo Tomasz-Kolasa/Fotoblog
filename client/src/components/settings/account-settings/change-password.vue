@@ -5,6 +5,7 @@
       plain
       @click="openDialog()"
     >
+      <v-icon class="mr-2">mdi-key-chain</v-icon>
       zmień hasło
     </v-btn>
     <v-dialog
@@ -42,6 +43,7 @@
               @click:append="isShowPassword = !isShowPassword"
             ></v-text-field>
             <v-text-field
+              class="mb-3"
               v-model="changePwdVm.confirmNewPwd"
               placeholder="powtórz nowe hasło..."
               :rules="confirmPwdRules"
