@@ -208,7 +208,7 @@
         
         const response = await this.$http.get('Tags/GetAll').catch((response)=>{response})
 
-        if(response && response.data.status){
+        if(response && response.data.status===true){
           this.tags = response.data.data
         }
 
@@ -219,7 +219,7 @@
 
         const response = await this.$http.delete('Tags/Remove/'+this.removeVm.id).catch((response)=>{response})
         
-        if(response && response.data.status){
+        if(response && response.data.status===true){
           this.getTags()
           this.removeDialog = false
           this.$toast.success('Sukces!')
@@ -237,7 +237,7 @@
 
         const response = await this.$http.put('Tags/Update', updatedTag).catch((response)=>{response})
         
-        if(response && response.data.status){
+        if(response && response.data.status===true){
             this.$toast.success('Sukces!')
             this.getTags()
         }
@@ -250,7 +250,7 @@
 
           const response = await this.$http.post('Tags/AddNew', this.addVm).catch((response)=>{response})
 
-          if(response && response.data.status){
+          if(response && response.data.status===true){
               this.$toast.success('Sukces!')
               this.getTags()
           }

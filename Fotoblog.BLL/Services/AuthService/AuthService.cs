@@ -1,12 +1,16 @@
 ﻿using AutoMapper;
 using DevOne.Security.Cryptography.BCrypt;
+using Fotoblog.BLL.Services.EmailService;
 using Fotoblog.BLL.Services.ServiceResultNS;
 using Fotoblog.DAL;
 using Fotoblog.DAL.Entities;
 using Fotoblog.Utils.ViewModels.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using MimeKit;
+using MimeKit.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -16,9 +20,13 @@ namespace Fotoblog.BLL.Services.AuthService
     public class AuthService : BaseService, IAuthService
     {
         private readonly IConfiguration _config;
-        public AuthService(ApplicationDbContext dbContext, IMapper mapper, IConfiguration config) : base(dbContext, mapper)
+        private readonly IEmailService _emailService;
+        public AuthService(
+            ApplicationDbContext dbContext, IMapper mapper, IConfiguration config, IEmailService emailService
+            ) : base(dbContext, mapper)
         {
             _config = config;
+            _emailService = emailService;
         }
 
         public async Task<ServiceResult> RegisterAdmin(RegisterAdminVm registerAdminVm)
@@ -30,12 +38,26 @@ namespace Fotoblog.BLL.Services.AuthService
                 return ServiceResult.Fail(ErrorCodes.AdminAlreadyRegistered);
             }
 
-            var passwordHash = BCryptHelper.HashPassword(registerAdminVm.Password, BCryptHelper.GenerateSalt());
             var userEntity = new UserEntity {
                 UserName = registerAdminVm.UserName,
-                Hash = passwordHash};
+                Hash = BCryptHelper.HashPassword(registerAdminVm.Password, BCryptHelper.GenerateSalt()),
+                Email = registerAdminVm.Email,
+                IsEmailConfirmed = false,
+                EmailVerificationCode = Guid.NewGuid().ToString()
+            };
+
             await _dbContext.UserEntities.AddAsync(userEntity);
             _dbContext.SaveChanges();
+
+            try
+            {
+                await _emailService.SendUserActivationLink(
+                    userEntity.UserName, userEntity.EmailVerificationCode, userEntity.Email);
+            }
+            catch(Exception)
+            {
+                return ServiceResult.Fail(ErrorCodes.EmailConfirmationLinkNotSent);
+            }
 
             return ServiceResult.Ok();
         }

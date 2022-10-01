@@ -240,7 +240,7 @@ export default {
       async getAllPhotos(){
         const response = await this.$http.get('Photos/GetAll').catch((response)=>{response})
 
-        if(response && response.data.status){
+        if(response && response.data.status===true){
           this.photos = response.data.data
           this.filteredPhotos = this.photos
         }
@@ -266,7 +266,7 @@ export default {
                 }
             })
 
-        if(response && response.data.status)
+        if(response && response.data.status===true)
         {
           this.removePhoto(this.deleteVm.id)
           this.$toast.success("Zdjęcie zostało usunięte.")
@@ -293,7 +293,7 @@ export default {
                 }
             })
 
-        if(response && response.data.status)
+        if(response && response.data.status===true)
         {
           var index = this.photos.findIndex((e)=>{ return e.id == this.updateVm.id})
           this.photos[index] = JSON.parse(JSON.stringify(this.updateVm))
@@ -328,7 +328,7 @@ export default {
       async getTags(){
         const response = await this.$http.get('Tags/GetAll').catch((response)=>{response})
 
-        if(response && response.data.status){
+        if(response && response.data.status===true){
           this.allUpdateTags = response.data.data
         }
 

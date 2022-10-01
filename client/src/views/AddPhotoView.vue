@@ -177,7 +177,7 @@ export default {
           }
         ).catch((response)=>{response})
 
-        if(response && response.data.status){
+        if(response && response.data.status===true){
             this.photoVm.title = ''
             this.photoVm.description = ''
             this.photoVm.tags = []
@@ -214,7 +214,7 @@ export default {
       async getTags(){
         const response = await this.$http.get('Tags/GetAll').catch((response)=>{response})
 
-        if(response && response.data.status){
+        if(response && response.data.status===true){
           this.allTags = response.data.data
           this.isAllTagsLoadingFailed = false
         } else {

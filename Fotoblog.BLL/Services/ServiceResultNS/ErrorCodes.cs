@@ -17,9 +17,10 @@
         // authentication
         BadCredentials = 40,
         AdminAlreadyRegistered = 41,
+        EmailConfirmationLinkNotSent = 42,
 
         // settings
         UserNotExists = 50,
-        WrongPassword = 51
+        WrongPassword = 51,
     }
 }

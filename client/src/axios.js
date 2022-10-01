@@ -38,6 +38,9 @@ Axios.interceptors.response.use(response => response, error => {
             case 41:
               Vue.$toast.error("Konto administratora już istnieje.")
               break;
+            case 42:
+              Vue.$toast.warning("Częściowy sukces ;)")
+              break;
             case 50:
               Vue.$toast.error("Wystąpił błąd 50.")
               break;

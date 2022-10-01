@@ -55,7 +55,7 @@
             async getTags(){
                 const response = await this.$http.get('Tags/GetAll').catch((response)=>{response})
 
-                if(response && response.data.status){
+                if(response && response.data.status===true){
                     this.tags = response.data.data
                 }
 

@@ -15,7 +15,7 @@
             >
                 <v-text-field
                     v-model="loginVm.userName"
-                    placeholder="login"
+                    placeholder="login..."
                     required
                     :counter="20"
                     :rules="rules"
@@ -24,7 +24,7 @@
                 </v-text-field>
                 <v-text-field
                     v-model="loginVm.password"
-                    placeholder="hasło"
+                    placeholder="hasło..."
                     :append-icon="isShowPassword ? 'mdi-eye' : 'mdi-eye-off'"
                     required
                     :type="isShowPassword?'text':'password'"
@@ -48,8 +48,8 @@
         </v-row>
 
         <v-dialog
-        v-if="setCredsDialog"
-        v-model="setCredsDialog"
+        v-if="credsDialog"
+        v-model="credsDialog"
         persistent
         max-width="800"
         >
@@ -68,7 +68,7 @@
                 >
                     <v-text-field
                         v-model="credsVm.userName"
-                        placeholder="utwórz login"
+                        placeholder="utwórz login..."
                         required
                         :counter="20"
                         :rules="rules"
@@ -76,8 +76,16 @@
                     >
                     </v-text-field>
                     <v-text-field
+                        v-model="credsVm.email"
+                        placeholder="twój email..."
+                        required
+                        :counter="20"
+                        :rules="emailRules"
+                    >
+                    </v-text-field>
+                    <v-text-field
                         v-model="credsVm.password"
-                        placeholder="utwórz hasło"
+                        placeholder="utwórz hasło..."
                         :append-icon="isShowCredsPassword ? 'mdi-eye' : 'mdi-eye-off'"
                         required
                         :type="isShowCredsPassword?'text':'password'"
@@ -87,8 +95,9 @@
                     >
                     </v-text-field>
                     <v-text-field
+                        class="mb-3"
                         v-model="credsVm.confirmPassword"
-                        placeholder="powtórz hasło"
+                        placeholder="powtórz hasło..."
                         :append-icon="isShowCredsPassword ? 'mdi-eye' : 'mdi-eye-off'"
                         required
                         :type="isShowCredsPassword?'text':'password'"
@@ -118,21 +127,29 @@
             </v-card-text>
             </v-card>
         </v-dialog>
+        <InfoDialog
+          :header="infoDialogHeader"
+          :text="infoDialogText"
+        />
     </v-container>
 </template>
 <script>
     import { useUserStore } from '@/pinia/stores/useUserStore'
     import Axios from 'axios'
+    import InfoDialog from '@/components/InfoDialog.vue'
 
     export default {
         name: 'LoginView',
         beforeRouteEnter: (to, from, next)=>{
-        var user = useUserStore()
-        if(user.isAdmin)
-        {
-            next({name:'HomeView'})
-        }
-        next()
+          var user = useUserStore()
+          if(user.isAdmin)
+          {
+              next({name:'HomeView'})
+          }
+          next()
+        },
+        components: {
+          InfoDialog
         },
         data(){
             return{
@@ -149,11 +166,12 @@
                 ],
                 user: useUserStore(),
 
-                setCredsDialog: false,
+                credsDialog: false,
                 isCredsFormValid: false,
                 isCredsLoader: false,
                 credsVm: {
                     userName: '',
+                    email:'',
                     password: '',
                     confirmPassword: ''
                 },
@@ -161,7 +179,14 @@
                     v => !!v || 'Pole wymagane',
                     v => (v == this.credsVm.password) || 'Hasła muszą być identyczne'
                 ],
-                isShowCredsPassword: false
+                emailRules:[
+                    v => !!v || 'Pole wymagane',    
+                    v => !!v.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/) || 'Wprowadź prawidłowy email'
+                ],
+                isShowCredsPassword: false,
+
+                infoDialogHeader: 'Hmmm...',
+                infoDialogText: ''
             }
         },
         methods:{
@@ -174,7 +199,7 @@
                         response
                         self.isLoading = false})
 
-                if(response && response.data.status)
+                if(response && response.data.status===true)
                 {
                     const token = response.data.data
                     this.user.login(token)
@@ -194,31 +219,49 @@
                 }
             },
             closeDialog(){
-                this.setCredsDialog = false
+                this.credsDialog = false
                 this.isCredsLoader = false
                 this.isLoading = false
                 this.$refs.credsForm.reset()
                 this.user.logout()
             },
             openDialog(){
-                this.setCredsDialog = true
+                this.credsDialog = true
             },
             async SetAdminCreds(){
-                this.isCredsLoader = true
+              var isEmailConfirmationLinkNotSent = false
+              this.isCredsLoader = true
 
-                const response = await this.$http.post(
-                    'Auth/RegisterAdmin',this.credsVm,{
-                        headers:{
-                            Authorization: `bearer ${this.user.token}`
-                        }
-                    }).catch((response)=>response)
+              const response = await this.$http.post(
+                  'Auth/RegisterAdmin',this.credsVm,{
+                      headers:{
+                          Authorization: `bearer ${this.user.token}`
+                      }
+                  }).catch(function (response) {
 
-                if(response && response.data.status)
+                      if(response && response.data)
+                      {   
+                          var errorCode = response.data.errorCode
+                          isEmailConfirmationLinkNotSent = (42 == errorCode) ? true:false
+                      }
+                  })
+
+                if(response && response.data.status===true)
                 {
-                    this.loginVm.userName = ''
-                    this.loginVm.password = ''
-                    this.closeDialog()
-                    this.$toast.success("Super! Możesz już się logować!")
+                  this.loginVm.userName = ''
+                  this.loginVm.password = ''
+                  var name = this.credsVm.userName
+                  this.closeDialog()
+                  this.$toast.success(`Super, ${name}, zapisaliśmy wszystko.`)
+                  this.$toast.success('Wysłaliśmy Ci także @ z linkiem aktywacyjnym.',{duration: 0})
+                }
+
+                if(isEmailConfirmationLinkNotSent){
+                  this.loginVm.userName = ''
+                  this.loginVm.password = ''
+                  this.closeDialog()
+                  this.infoDialogText='Wszystko poszło ok, ale nie udało się wysłać @ z linkiem aktywacyjnym. '+
+                    'Zaloguj się za pomocą nowo utworzonego konta, a będziesz mógł wysłać @ ponownie.'
                 }
 
                 this.isCredsLoader = false
