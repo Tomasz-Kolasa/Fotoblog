@@ -26,6 +26,22 @@ namespace Fotoblog.BLL.Services.AuthService
             _emailService = emailService;
         }
 
+        public async Task<ServiceResult> ConfirmEmail(ConfirmEmailVm confirmEmailVm)
+        {
+            var user = await _dbContext.UserEntities.FirstOrDefaultAsync(
+                u => u.Email==confirmEmailVm.Email.ToLower() && u.EmailVerificationCode==confirmEmailVm.Token);
+            
+            if (user==null)
+            {
+                return ServiceResult.Fail(ErrorCodes.EmailTokenNotFound);
+            }
+
+            user.IsEmailConfirmed = true;
+            await _dbContext.SaveChangesAsync();
+
+            return ServiceResult.Ok();
+        }
+
         public async Task<ServiceResult> RegisterAdmin(RegisterAdminVm registerAdminVm)
         {
             var usersQty = _dbContext.UserEntities.Count();
@@ -38,7 +54,7 @@ namespace Fotoblog.BLL.Services.AuthService
             var userEntity = new UserEntity {
                 UserName = registerAdminVm.UserName,
                 Hash = BCryptHelper.HashPassword(registerAdminVm.Password, BCryptHelper.GenerateSalt()),
-                Email = registerAdminVm.Email,
+                Email = registerAdminVm.Email.ToLower(),
                 IsEmailConfirmed = false,
                 EmailVerificationCode = Guid.NewGuid().ToString()
             };

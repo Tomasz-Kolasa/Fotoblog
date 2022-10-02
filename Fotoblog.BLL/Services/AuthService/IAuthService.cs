@@ -5,6 +5,7 @@ namespace Fotoblog.BLL.Services.AuthService
 {
     public interface IAuthService
     {
+        Task<ServiceResult> ConfirmEmail(ConfirmEmailVm confirmEmailVm);
         Task<ServiceResult<string>> Login(LoginUserVm loginUserVm);
         Task<ServiceResult> RegisterAdmin(RegisterAdminVm registerAdminVm);
     }

@@ -38,7 +38,7 @@
             var result = await this.$http.post('Auth/ConfirmEmail', confirm).catch(response=>{response})
 
             if(result && result.data.status===true){
-              this.result = 'Możesz się już zalogować'
+              this.result = 'Konto zostało aktywowane. Możesz się już zalogować'
               this.$toast.success('Adres email został potwierdzony')
             }
 

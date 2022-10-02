@@ -27,5 +27,12 @@ namespace Fotoblog.Controllers
             var result = await _authService.Login(loginUserVm);
             return FromResult(result);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmEmail(ConfirmEmailVm confirmEmailVm)
+        {
+            var result = await _authService.ConfirmEmail(confirmEmailVm);
+            return FromResult(result);
+        }
     }
 }

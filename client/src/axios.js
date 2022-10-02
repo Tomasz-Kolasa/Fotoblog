@@ -44,6 +44,9 @@ Axios.interceptors.response.use(response => response, error => {
             case 43:
               Vue.$toast.warning("Twój adres email jest jeszcze niepotwierdzony.")
               break
+            case 44:
+              Vue.$toast.error("Niewłaściwy bądź nieaktualny link.")
+              break
             case 50:
               Vue.$toast.error("Wystąpił błąd 50.")
               break;

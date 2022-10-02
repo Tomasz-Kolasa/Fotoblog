@@ -19,6 +19,7 @@
         AdminAlreadyRegistered = 41,
         EmailConfirmationLinkNotSent = 42,
         EmailNotConfirmed = 43,
+        EmailTokenNotFound = 44,
 
         // settings
         UserNotExists = 50,
