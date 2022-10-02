@@ -29,7 +29,9 @@ namespace Fotoblog.BLL.Services.AuthService
         public async Task<ServiceResult> ConfirmEmail(ConfirmEmailVm confirmEmailVm)
         {
             var user = await _dbContext.UserEntities.FirstOrDefaultAsync(
-                u => u.Email==confirmEmailVm.Email.ToLower() && u.EmailVerificationCode==confirmEmailVm.Token);
+                u => u.Email==confirmEmailVm.Email.ToLower()
+                && u.EmailVerificationCode==confirmEmailVm.Token
+                && u.IsEmailConfirmed==false);
             
             if (user==null)
             {
