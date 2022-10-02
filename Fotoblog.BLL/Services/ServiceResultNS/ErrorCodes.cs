@@ -18,6 +18,7 @@
         BadCredentials = 40,
         AdminAlreadyRegistered = 41,
         EmailConfirmationLinkNotSent = 42,
+        EmailNotConfirmed = 43,
 
         // settings
         UserNotExists = 50,

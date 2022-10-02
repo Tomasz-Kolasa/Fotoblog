@@ -127,10 +127,27 @@
             </v-card-text>
             </v-card>
         </v-dialog>
-        <InfoDialog
-          :header="infoDialogHeader"
-          :text="infoDialogText"
-        />
+        <InfoDialog :visible.sync="isInfoDialog_notSentEmail">
+          <template v-slot:title>
+            Hmmm...
+          </template>
+          <template v-slot:text>
+            <p>Utworzyliśmy konto, ale nie udało się wysłać @ z linkiem aktywacyjnym.</p>
+            <p>Możesz spróbować wysłać go ponownie <a href="#">tutaj</a>,</p>
+            <p>lub</p>
+            <p>zalogować się za pomocą nowo utworzonego konta i spróbować wysłać później.</p>
+          </template>
+        </InfoDialog>
+
+        <InfoDialog :visible.sync="isInfoDialog_unconfirmedEmail">
+          <template v-slot:title>
+            Potwierdź email
+          </template>
+          <template v-slot:text>
+            <p>Podczas rejstracji konta wysłaliśmy Ci email z linkiem aktywacyjnym, ale najwyraźniej nie kliknąłeś go jeszcze.</p>
+            <p>Jeśli nie otrzymałeś tego maila, możesz ponownie wysłać go <a href="#">teraz</a>.</p>
+          </template>
+        </InfoDialog>
     </v-container>
 </template>
 <script>
@@ -185,8 +202,8 @@
                 ],
                 isShowCredsPassword: false,
 
-                infoDialogHeader: 'Hmmm...',
-                infoDialogText: ''
+                isInfoDialog_notSentEmail: false,
+                isInfoDialog_unconfirmedEmail: false,
             }
         },
         methods:{
@@ -196,7 +213,10 @@
                 this.isLoading = true
                 const response = await this.$http.post('Auth/Login',this.loginVm).catch(
                     (response)=>{
-                        response
+                        if(response.data && 43==response.data.errorCode)
+                        {
+                          this.isInfoDialog_unconfirmedEmail = true
+                        }
                         self.isLoading = false})
 
                 if(response && response.data.status===true)
@@ -239,10 +259,9 @@
                       }
                   }).catch(function (response) {
 
-                      if(response && response.data)
+                      if(response.data)
                       {   
-                          var errorCode = response.data.errorCode
-                          isEmailConfirmationLinkNotSent = (42 == errorCode) ? true:false
+                          isEmailConfirmationLinkNotSent = (42 == response.data.errorCode) ? true:false
                       }
                   })
 
@@ -260,8 +279,8 @@
                   this.loginVm.userName = ''
                   this.loginVm.password = ''
                   this.closeDialog()
-                  this.infoDialogText='Wszystko poszło ok, ale nie udało się wysłać @ z linkiem aktywacyjnym. '+
-                    'Zaloguj się za pomocą nowo utworzonego konta, a będziesz mógł wysłać @ ponownie.'
+
+                  this.isInfoDialog_notSentEmail = true
                 }
 
                 this.isCredsLoader = false

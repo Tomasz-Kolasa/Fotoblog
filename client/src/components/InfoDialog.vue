@@ -5,8 +5,12 @@
     max-width="500"
   >
     <v-card>
-      <v-card-title class="text-h5">{{header}}</v-card-title>
-      <v-card-text>{{text}}</v-card-text>
+      <v-card-title class="text-h5">
+        <slot name="title"></slot>
+      </v-card-title>
+      <v-card-text>
+        <slot name="text"></slot>
+      </v-card-text>
       <v-card-actions>
         <v-btn
           color="success"
@@ -20,9 +24,12 @@
   </v-dialog>
 </template>
 <script>
+
   export default{
     name:'InfoDialog',
-    props:['header', 'text'],
+    props:{
+      visible:Boolean
+    },
     data(){
       return{
         dialog: false
@@ -30,12 +37,12 @@
     },
     methods:{
       close(){
-        this.dialog = false
+        this.$emit('update:visible', false)
       }
     },
-    watch: {
-      text: function(val){
-        this.dialog = (val=='')?false:true
+    watch:{
+      visible: function(val){
+        this.dialog = val
       }
     }
   }

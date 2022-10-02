@@ -5,12 +5,9 @@ using Fotoblog.BLL.Services.ServiceResultNS;
 using Fotoblog.DAL;
 using Fotoblog.DAL.Entities;
 using Fotoblog.Utils.ViewModels.Auth;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using MimeKit;
-using MimeKit.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -88,6 +85,10 @@ namespace Fotoblog.BLL.Services.AuthService
             if (user == null ||!BCryptHelper.CheckPassword(loginUserVm.Password, user.Hash))
             {
                 return ServiceResult<string>.Fail(ErrorCodes.BadCredentials);
+            }
+            else if(!user.IsEmailConfirmed)
+            {                    
+                return ServiceResult<string>.Fail(ErrorCodes.EmailNotConfirmed);
             }
             else
             {
