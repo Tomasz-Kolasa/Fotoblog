@@ -38,6 +38,12 @@ const routes = [
         name: 'SettingsView',
         path: '/settings',
         component: () => import(/* webpackChunkName: "SettingsView" */ '../views/SettingsView.vue')
+      },
+      {
+        name: 'ConfirmEmailView',
+        path: 'confirm-email/:email/:token',
+        props: true,
+        component: () => import(/* webpackChunkName: "ConfirmEmailView" */ '../views/ConfirmEmailView.vue')
       }
     ]
   }
