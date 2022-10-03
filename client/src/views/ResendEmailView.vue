@@ -24,9 +24,11 @@
           >
           </v-text-field>
           <v-btn
+            :disabled="!isFormValid"
             :loading="isLoading"
             color="success"
             @click="resendEmail()"
+            class="mt-3"
           >
             wyślij
           </v-btn>
@@ -60,7 +62,7 @@
         }).catch(response=>response)
 
         if(response && response.data && response.data.status===true){
-          this.$toast.success('Możesz sprawdzać pocztę ;)')
+          this.$toast.success('Jeśli podany @ był prawidłowy wysłaliśmy link.')
         }
 
         this.isLoading = false

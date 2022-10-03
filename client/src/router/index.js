@@ -49,6 +49,11 @@ const routes = [
         name: 'ResendEmailView',
         path: 'resend-email',
         component: () => import(/* webpackChunkName: "ResendEmailView" */ '../views/ResendEmailView.vue')
+      },
+      {
+        name: 'ResetPasswordView',
+        path: 'reset-password',
+        component: () => import(/* webpackChunkName: "ResendEmailView" */ '../views/ResetPasswordView.vue')
       }
     ]
   }

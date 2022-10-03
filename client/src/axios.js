@@ -47,6 +47,9 @@ Axios.interceptors.response.use(response => response, error => {
             case 44:
               Vue.$toast.error("Niewłaściwy bądź nieaktualny link.")
               break
+            case 45:
+              Vue.$toast.error("Nie udało się wysłać maila.")
+              break
             case 50:
               Vue.$toast.error("Wystąpił błąd 50.")
               break;

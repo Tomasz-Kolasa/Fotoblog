@@ -21,6 +21,24 @@ namespace Fotoblog.BLL.Services.EmailService
             _configuration = configuration;
         }
 
+        public async Task SendUserResetPasswordLink(string userName, string token, string userEmail)
+        {
+            var clientUrl = _configuration.GetSection("Client:Url").Value;
+
+            var emailBodyTemplate = File.ReadAllText(
+                Path.Combine(
+                    Environment.CurrentDirectory,
+                    @"..\Fotoblog.Utils\Templates\Auth\reset-password-email.html"
+                    ));
+
+            var emailBody = emailBodyTemplate.Replace("{{username}}", userName)
+                .Replace("{{clientUrl}}", clientUrl)
+                .Replace("{{email}}", userEmail)
+                .Replace("{{token}}", token);
+
+            await Send(userEmail, "Zmiana hasła w serwisie Fotoblog", emailBody);
+        }
+
         public async Task SendUserActivationLink(string userName, string token, string userEmail)
         {
             var clientUrl = _configuration.GetSection("Client:Url").Value;

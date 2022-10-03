@@ -26,11 +26,50 @@ namespace Fotoblog.BLL.Services.AuthService
             _emailService = emailService;
         }
 
-        public async Task<ServiceResult> ResendEmail(string email)
+        /// <summary>
+        /// Send the adamin an email with a link so that they can reset the password
+        /// </summary>
+        /// <param name="email">admin's email to resend the link to</param>
+        /// <returns>ServiceResult.Ok() if the email is send successfuly OR given email is not found.
+        /// ServiceResult.Fail() if given email was found, but the try of sending email fails.
+        public async Task<ServiceResult> SendResetPassword(string email)
         {
             var user = await _dbContext.UserEntities.FirstOrDefaultAsync(
                 u => u.Email == email.ToLower()
                 && u.IsEmailConfirmed);
+
+            if (user != null)
+            {
+                user.EmailVerificationCode = Guid.NewGuid().ToString();
+                await _dbContext.SaveChangesAsync();
+
+                try
+                {
+                    await _emailService.SendUserResetPasswordLink(
+                        user.UserName, user.EmailVerificationCode, user.Email);
+                }
+                catch (Exception)
+                {
+                    return ServiceResult.Fail(ErrorCodes.ResetPasswordLinkNotSent);
+                }
+            }
+
+            return ServiceResult.Ok();
+        }
+
+        /// <summary>
+        /// Resend the adamin an email with a link so that they can confirm that they are the owner of the mailbox
+        /// Only send an email if given email exists
+        /// </summary>
+        /// <param name="email">email to resend the link to</param>
+        /// <returns>ServiceResult.Ok() if the email is send successfuly OR given email is not found.
+        /// ServiceResult.Fail() if given email was found, but the try of sending email fails.
+        /// </returns>
+        public async Task<ServiceResult> ResendEmail(string email)
+        {
+            var user = await _dbContext.UserEntities.FirstOrDefaultAsync(
+                u => u.Email == email.ToLower()
+                && !u.IsEmailConfirmed);
 
             if (user != null)
             {

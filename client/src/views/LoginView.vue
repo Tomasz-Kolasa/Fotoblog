@@ -39,11 +39,18 @@
                     @click="login()"
                     :disabled="!isFormValid"
                     :loading="isLoading"
-                    class="mt-3"
+                    class="mt-3 mb-10"
                     >
                     zaloguj
                 </v-btn>
             </v-form>
+            <div class="text-right">
+              <router-link
+                to="/reset-password"
+              >
+                Nie pamiętam hasła
+              </router-link>
+            </div>
             </v-col>
         </v-row>
 
