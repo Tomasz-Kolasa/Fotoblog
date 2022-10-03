@@ -2,6 +2,7 @@
 using Fotoblog.Utils.ViewModels.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Fotoblog.Controllers
 {
@@ -32,6 +33,13 @@ namespace Fotoblog.Controllers
         public async Task<IActionResult> ConfirmEmail(ConfirmEmailVm confirmEmailVm)
         {
             var result = await _authService.ConfirmEmail(confirmEmailVm);
+            return FromResult(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResendEmail([FromQuery][EmailAddress]string email)
+        {
+            var result = await _authService.ResendEmail(email);
             return FromResult(result);
         }
     }

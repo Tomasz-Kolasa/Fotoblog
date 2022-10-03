@@ -133,7 +133,7 @@
           </template>
           <template v-slot:text>
             <p>Utworzyliśmy konto, ale nie udało się wysłać @ z linkiem aktywacyjnym.</p>
-            <p>Możesz spróbować wysłać go ponownie <a href="#">tutaj</a>,</p>
+            <p>Możesz spróbować wysłać go ponownie <router-link to="/resend-email">tutaj</router-link>,</p>
             <p>lub</p>
             <p>zalogować się za pomocą nowo utworzonego konta i spróbować wysłać później.</p>
           </template>
@@ -145,7 +145,7 @@
           </template>
           <template v-slot:text>
             <p>Podczas rejstracji konta wysłaliśmy Ci email z linkiem aktywacyjnym, ale najwyraźniej nie kliknąłeś go jeszcze.</p>
-            <p>Jeśli nie otrzymałeś tego maila, możesz ponownie wysłać go <a href="#">teraz</a>.</p>
+            <p>Jeśli nie otrzymałeś tego maila, możesz ponownie wysłać go <router-link to="/resend-email">tutaj</router-link>.</p>
           </template>
         </InfoDialog>
     </v-container>

@@ -44,6 +44,11 @@ const routes = [
         path: 'confirm-email/:email/:token',
         props: true,
         component: () => import(/* webpackChunkName: "ConfirmEmailView" */ '../views/ConfirmEmailView.vue')
+      },
+      {
+        name: 'ResendEmailView',
+        path: 'resend-email',
+        component: () => import(/* webpackChunkName: "ResendEmailView" */ '../views/ResendEmailView.vue')
       }
     ]
   }

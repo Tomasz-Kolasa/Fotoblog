@@ -39,7 +39,7 @@ Axios.interceptors.response.use(response => response, error => {
               Vue.$toast.error("Konto administratora już istnieje.")
               break;
             case 42:
-              Vue.$toast.warning("Częściowy sukces ;)")
+              Vue.$toast.error("Nie udało się wysłać maila.")
               break;
             case 43:
               Vue.$toast.warning("Twój adres email jest jeszcze niepotwierdzony.")

@@ -26,6 +26,28 @@ namespace Fotoblog.BLL.Services.AuthService
             _emailService = emailService;
         }
 
+        public async Task<ServiceResult> ResendEmail(string email)
+        {
+            var user = await _dbContext.UserEntities.FirstOrDefaultAsync(
+                u => u.Email == email.ToLower()
+                && u.IsEmailConfirmed);
+
+            if (user != null)
+            {
+                try
+                {
+                    await _emailService.SendUserActivationLink(
+                        user.UserName, user.EmailVerificationCode, user.Email);
+                }
+                catch (Exception)
+                {
+                    return ServiceResult.Fail(ErrorCodes.EmailConfirmationLinkNotSent);
+                }
+            }
+
+            return ServiceResult.Ok();
+        }
+
         public async Task<ServiceResult> ConfirmEmail(ConfirmEmailVm confirmEmailVm)
         {
             var user = await _dbContext.UserEntities.FirstOrDefaultAsync(
