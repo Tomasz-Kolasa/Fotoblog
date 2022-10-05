@@ -5,6 +5,7 @@ using Fotoblog.BLL.Services.ServiceResultNS;
 using Fotoblog.DAL;
 using Fotoblog.DAL.Entities;
 using Fotoblog.Utils.ViewModels.Auth;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -24,6 +25,30 @@ namespace Fotoblog.BLL.Services.AuthService
         {
             _config = config;
             _emailService = emailService;
+        }
+
+        /// <summary>
+        /// Checkc if eamil & token exists. If so, sets new password.
+        /// </summary>
+        /// <param name="resetPasswordVm">Email&token, old password and new password to be set</param>
+        /// <returns>ServiceResult.Ok() if password successfuly changed
+        /// ServiceResult.Fail() with relevant error code on fail
+        /// </returns>
+        public async Task<ServiceResult> ResetPassword(ResetPasswordVm resetPasswordVm)
+        {
+            var user = await _dbContext.UserEntities.FirstOrDefaultAsync(
+                u => u.Email==resetPasswordVm.Email && u.EmailVerificationCode==resetPasswordVm.Token);
+
+            if (user == null)
+            {
+                return ServiceResult.Fail(ErrorCodes.InvalidResetPwdLink);
+            }
+
+            user.Hash = BCryptHelper.HashPassword(resetPasswordVm.NewPwd, BCryptHelper.GenerateSalt());
+            user.EmailVerificationCode = Guid.NewGuid().ToString();
+            await _dbContext.SaveChangesAsync();
+
+            return ServiceResult.Ok();
         }
 
         /// <summary>

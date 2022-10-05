@@ -52,7 +52,8 @@ const routes = [
       },
       {
         name: 'ResetPasswordView',
-        path: 'reset-password',
+        path: 'reset-password/:email?/:token?',
+        props: true,
         component: () => import(/* webpackChunkName: "ResendEmailView" */ '../views/ResetPasswordView.vue')
       }
     ]

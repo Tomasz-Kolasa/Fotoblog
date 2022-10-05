@@ -21,6 +21,7 @@
         EmailNotConfirmed = 43,
         EmailTokenNotFound = 44,
         ResetPasswordLinkNotSent = 45,
+        InvalidResetPwdLink = 46,
 
         // settings
         UserNotExists = 50,

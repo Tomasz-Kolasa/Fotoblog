@@ -49,5 +49,12 @@ namespace Fotoblog.Controllers
             var result = await _authService.SendResetPassword(email);
             return FromResult(result);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordVm resetPasswordVm)
+        {
+            var result = await _authService.ResetPassword(resetPasswordVm);
+            return FromResult(result);
+        }
     }
 }
