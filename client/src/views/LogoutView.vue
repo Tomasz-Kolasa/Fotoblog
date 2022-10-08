@@ -31,10 +31,14 @@
                 this.user.logout()
                 delete Axios.defaults.headers.Authorization
                 this.$toast.success('Wylogowano.')
+                setTimeout(()=>{
+                    this.$router.push({name:'HomeView'})
+                }, 2000)
+
             }
         },
         mounted(){
-            this.user.logout()
+            this.logout()
         }
     }
 </script>

@@ -4,8 +4,8 @@
         <v-col
           :cols="$vuetify.breakpoint.mobile?12:6"
         >
-          <h2 class="text-h4 mt-5">Zmiana hasła</h2>
-          <p class="mt-5">wpisza adres email podany przy rejestracji a wyślemy Ci link umożliwiający zmianę hasła</p>
+          <h2 class="text-h4 mt-5">resetuj hasło</h2>
+          <p class="mt-5">podaj adres email podany przy rejestracji a wyślemy Ci link umożliwiający zmianę hasła</p>
         </v-col>
         <v-col
           :cols="$vuetify.breakpoint.mobile?12:6"

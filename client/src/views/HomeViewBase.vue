@@ -1,14 +1,6 @@
 <template>
   <div>
     <v-main>
-      <v-container>
-        <v-row>
-          <v-col>
-            <h1 class="my-8 text-h4 text-center">Fotoblog</h1>
-            <v-divider></v-divider>
-          </v-col>
-        </v-row>
-      </v-container>
       <router-view /> <!-- template expanded here -->
     </v-main>
     <v-footer color="white" app absolute>

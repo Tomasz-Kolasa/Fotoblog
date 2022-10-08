@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-row align="center"
+    class="pt-15"
     justify="end">
       <v-btn
       color="indigo"
@@ -168,10 +169,6 @@
       return {
         tags: [],
         headers: [
-          {
-            text: 'Id',
-            value: 'id'
-          },
           {
             text: 'nazwa taga',
             value: 'name'

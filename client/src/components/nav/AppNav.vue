@@ -7,7 +7,15 @@
         >
         </v-app-bar-nav-icon>
 
-        <v-toolbar-title>Fotoblog</v-toolbar-title>
+        <v-toolbar-title>
+          <v-btn
+            to="/"
+            plain
+            text
+            class="v-btn--active">
+            Fotoblog
+          </v-btn>
+        </v-toolbar-title>
         <v-spacer class="d-none d-sm-flex"></v-spacer>
         <span class="d-flex">{{user.name}}</span>
         <v-spacer class="d-none d-sm-flex"></v-spacer>

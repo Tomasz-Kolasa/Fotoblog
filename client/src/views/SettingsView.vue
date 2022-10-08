@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-row>
+        <v-row class="pt-15">
             <v-col>
                 <h2 class="tex-h2 mb-4 text-center">
                     <v-icon>mdi-cog-outline</v-icon>

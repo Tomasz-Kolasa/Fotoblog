@@ -8,14 +8,14 @@
             :key="tag.id"
             v-model="selectedTags"
             multiple
-            indeterminate-icon="mdi-eye-arrow-left-outline"
+            indeterminate-icon="mdi-eye-outline"
             :label="tag.name"
             color="indigo"
             :value="tag.id"
             hide-details
             class="ml-3"
             on-icon="mdi-eye-check-outline"
-            off-icon="mdi-eye-off-outline"
+            off-icon="mdi-eye-outline"
             @change="$emit('tags-selected',selectedTags)"
             :indeterminate.sync="stateIndetermianete"
             ></v-checkbox>

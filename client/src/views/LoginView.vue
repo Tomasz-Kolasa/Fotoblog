@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-row>
+        <v-row class="pt-15">
             <v-col
             :cols="$vuetify.breakpoint.name=='xs'?12:6"
             class="d-flex align-center justify-center"

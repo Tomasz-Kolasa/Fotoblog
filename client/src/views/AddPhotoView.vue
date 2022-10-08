@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container class="pt-15">
       <v-row>
         <v-col>
           <h2 class="text-h5">Dodaj zdjęcie</h2>

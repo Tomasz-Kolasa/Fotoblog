@@ -1,4 +1,12 @@
 <template>
+  <div>
+    <v-container>
+      <v-row>
+        <v-col class="pt-15 text-h5 font-weight-thin font-italic">
+          <q>Nie istnieją reguły opisujące dobrą fotografię,<br>są tylko dobre fotografie</q>
+        </v-col>
+      </v-row>
+    </v-container>
     <v-container>
       <tags-bar @tags-selected="filterPhotos"></tags-bar>
       <v-row v-if="isLoadingPhotos">
@@ -17,7 +25,7 @@
       </v-row>
       <v-row>  
         <v-col v-if="isNoPhotosToShow">
-          <h2 class="text-h4 text-center">brak zdjęć</h2>
+          <h2 class="mt-16 text-h5 font-weight-thin text-center">brak zdjęć</h2>
         </v-col>
         <photo-item
           v-for="photo in filteredPhotos"
@@ -165,6 +173,7 @@
           </v-card>
       </v-dialog>
     </v-container>
+  </div>
 </template>
 
 <script>
