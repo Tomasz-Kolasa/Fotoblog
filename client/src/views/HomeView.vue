@@ -7,7 +7,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-container>
+    <v-container fluid class="px-5">
       <tags-bar :selected.sync="selectedTags"></tags-bar>
       <v-row v-if="isLoadingPhotos">
         <v-col
@@ -321,7 +321,6 @@ export default {
       },
       filteredPhotos:{
         get: function(){
-          console.log('filtering photos')
           if(this.selectedTags.length==0){
             return this.photos
           } else {

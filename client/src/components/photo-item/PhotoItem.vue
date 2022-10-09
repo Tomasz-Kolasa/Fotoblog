@@ -1,7 +1,7 @@
 <template>
 <v-col
     class="d-flex child-flex flex-column mt-3"
-    :cols="$vuetify.breakpoint.name == 'xs'|| $vuetify.breakpoint.name =='sm' ? 12 : 6"
+    :cols="calculatedCols"
 >
     <div class="d-flex justify-space-between mb-2 text-subtitle-2">
         <div>
@@ -17,7 +17,7 @@
         </div>
     </div>
     <v-img
-    :src="$http.defaults.baseURL + photo.thumbnailUrl"
+    :src="$http.defaults.baseURL + (isThumbnailLink?photo.thumbnailUrl:photo.originalUrl)"
     :aspect-ratio="16/9"
     class="grey lighten-2"
     >
@@ -31,6 +31,7 @@
             class="fill-height ma-0"
             align="center"
             justify="center"
+            ref="photo"
             >
             <v-progress-circular
                 indeterminate
@@ -46,6 +47,7 @@
 <script>
     import OptionsBar from '@/components/photo-item/OptionsBar.vue'
     import { useUserStore } from '@/pinia/stores/useUserStore';
+    import {config} from '@/utils/config'
 
     export default {
         name: 'photo-item',
@@ -53,8 +55,44 @@
         components: { 'options-bar': OptionsBar},
         data(){
             return {
-                user: useUserStore()
+                user: useUserStore(),
+                isThumbnailLink: true
             }
+        },
+        methods:{
+            checkIfThumbnail(){
+                if(!this.$refs.photo) return
+
+                this.isThumbnailLink = (this.$refs.photo.clientWidth<=config.photos.thumbnailWidth)?true:false
+                console.log(this.isThumbnailLink)
+            }
+        },
+        computed:{
+            calculatedCols: function(){
+                var cols = 1
+                switch(this.$vuetify.breakpoint.name)
+                {
+                    case 'xl':
+                        cols=3
+                        break
+                    case 'lg':
+                        cols=2
+                        break
+                    case 'md':
+                        cols=1
+                        break
+                    case 'sm':
+                        cols=1
+                        break
+                    default:
+                        cols=1
+                }
+                
+                return 12 / cols
+            }
+        },
+        mounted(){
+            this.checkIfThumbnail()
         }
     }
 </script>
