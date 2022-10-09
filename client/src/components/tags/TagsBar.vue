@@ -16,7 +16,7 @@
             class="ml-3"
             on-icon="mdi-eye-check-outline"
             off-icon="mdi-eye-outline"
-            @change="$emit('tags-selected',selectedTags)"
+            @change="$emit('update:selected',selectedTags)"
             :indeterminate.sync="stateIndetermianete"
             ></v-checkbox>
 
@@ -64,7 +64,7 @@
             clear(){
                 this.selectedTags=[]
                 this.stateIndetermianete = true
-                this.$emit('tags-selected',this.selectedTags)
+                this.$emit('update:selected',this.selectedTags)
             }
         },
         mounted(){

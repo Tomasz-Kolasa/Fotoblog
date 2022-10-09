@@ -8,7 +8,7 @@
       </v-row>
     </v-container>
     <v-container>
-      <tags-bar @tags-selected="filterPhotos"></tags-bar>
+      <tags-bar :selected.sync="selectedTags"></tags-bar>
       <v-row v-if="isLoadingPhotos">
         <v-col
         v-for="n in 12"
@@ -185,7 +185,7 @@ export default {
     data(){
       return {
         photos: [],
-        filteredPhotos: [],
+        selectedTags: [],
         isLoadingPhotos: true,
         
         deleteDialog: false,
@@ -213,35 +213,9 @@ export default {
     watch: {
       menu (val) {
         val && setTimeout(() => (this.activePicker = 'YEAR'))
-      },
+      }
     },
     methods: {
-
-
-
-      filterPhotos: function(selectedTags){
-
-        if(selectedTags.length==0){
-          this.filteredPhotos = this.photos
-        } else {
-          this.filteredPhotos = this.photos.filter( (p) => {
-            var isTagInPhoto = false
-
-            for(var i=0; i<selectedTags.length; i++)
-            { 
-              var matchedPhotoTags = p.tags.filter(t=>t.id==selectedTags[i])
-              if(matchedPhotoTags.length>0){
-                isTagInPhoto = true
-                break
-              }
-            }
-
-            return isTagInPhoto
-          })
-        }
-      },
-
-
 
       save (date) {
         this.$refs.menu.save(date)
@@ -251,7 +225,6 @@ export default {
 
         if(response && response.data.status===true){
           this.photos = response.data.data
-          this.filteredPhotos = this.photos
         }
         this.isLoadingPhotos = false
       },
@@ -304,9 +277,7 @@ export default {
 
         if(response && response.data.status===true)
         {
-          var index = this.photos.findIndex((e)=>{ return e.id == this.updateVm.id})
-          this.photos[index] = JSON.parse(JSON.stringify(this.updateVm))
-
+          this.getAllPhotos()
           this.$toast.success("Załatwione.")
         }
         
@@ -347,6 +318,28 @@ export default {
     computed: {
       isNoPhotosToShow(){
         return !this.isLoadingPhotos && this.photos.length==0
+      },
+      filteredPhotos:{
+        get: function(){
+          console.log('filtering photos')
+          if(this.selectedTags.length==0){
+            return this.photos
+          } else {
+            return this.photos.filter( (p) => {
+              var isTagInPhoto = false
+
+              for(var i=0; i<this.selectedTags.length; i++)
+              { 
+                var matchedPhotoTags = p.tags.filter(t=>t.id==this.selectedTags[i])
+                if(matchedPhotoTags.length>0){
+                  isTagInPhoto = true
+                  break
+                }
+              }
+              return isTagInPhoto
+            })
+          }
+        }
       }
     },
     mounted(){
