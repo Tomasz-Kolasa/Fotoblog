@@ -39,6 +39,7 @@ builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IAutoMigrations, AutoMigrations>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -53,6 +54,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 var app = builder.Build();
+
+UseDbMigrations();
+app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -74,3 +78,12 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+void UseDbMigrations()
+{
+    using( var scope = app.Services.CreateScope() )
+    {
+        var autoMigrations = scope.ServiceProvider.GetRequiredService<IAutoMigrations>();
+        autoMigrations.Update();
+    }
+}
