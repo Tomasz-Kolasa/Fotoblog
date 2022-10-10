@@ -19,7 +19,8 @@
     <v-img
     :src="$http.defaults.baseURL + (isThumbnailLink?photo.thumbnailUrl:photo.originalUrl)"
     :aspect-ratio="16/9"
-    class="grey lighten-2"
+    contain
+    class="black"
     >
         <options-bar
             v-if="user.isAdmin"
