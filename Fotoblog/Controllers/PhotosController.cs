@@ -11,18 +11,10 @@ namespace Fotoblog.Controllers
     public class PhotosController : BaseController
     {
         private readonly IPhotoService _photoService;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IServer _server;
 
-        public PhotosController(IPhotoService photoService,
-            IWebHostEnvironment webHostEnvironment,
-            IServer server)
+        public PhotosController(IPhotoService photoService)
         {
-            _webHostEnvironment = webHostEnvironment;
             _photoService = photoService;
-            _server = server;
-            //var addresses = _server.Features.Get<IServerAddressesFeature>().Addresses;
-            _photoService.SetLocation(_webHostEnvironment.ContentRootPath);
         }
 
         [HttpPost]

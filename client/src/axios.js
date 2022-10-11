@@ -1,7 +1,11 @@
 import Axios from 'axios';
 import Vue from 'vue'
 
-Axios.defaults.baseURL='https://localhost:5000/api/'
+if(process.env.NODE_ENV=='production'){
+  Axios.defaults.baseURL= 'https://fotoblog-api-app.azurewebsites.net/api/'
+} else{
+  Axios.defaults.baseURL='https://localhost:5000/api/'
+}
 
 Vue.prototype.$http = Axios
 

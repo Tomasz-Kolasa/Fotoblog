@@ -7,7 +7,7 @@ namespace Fotoblog.BLL.Services.AuthService
     {
         Task<ServiceResult> ResetPassword(ResetPasswordVm resetPasswordVm);
         Task<ServiceResult> SendResetPassword(string email);
-        Task<ServiceResult> ResendEmail(string email);
+        Task<ServiceResult<string>> ResendEmail(string email);
         Task<ServiceResult> ConfirmEmail(ConfirmEmailVm confirmEmailVm);
         Task<ServiceResult<string>> Login(LoginUserVm loginUserVm);
         Task<ServiceResult> RegisterAdmin(RegisterAdminVm registerAdminVm);

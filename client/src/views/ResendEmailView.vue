@@ -59,7 +59,8 @@
           params:{
             email: this.email
           }
-        }).catch(response=>response)
+        }).catch((response)=>{
+          console.log(response)})
 
         if(response && response.data && response.data.status===true){
           this.$toast.success('Jeśli podany @ był prawidłowy wysłaliśmy link.')

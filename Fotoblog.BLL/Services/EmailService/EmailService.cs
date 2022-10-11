@@ -1,15 +1,14 @@
 ﻿using AutoMapper;
 using Fotoblog.DAL;
-using Fotoblog.Utils.ViewModels.Auth;
-using MediatR;
-using Microsoft.Extensions.Configuration;
-using MimeKit.Text;
-using MimeKit;
-using System.ComponentModel.DataAnnotations;
-using static Org.BouncyCastle.Math.EC.ECCurve;
-using Fotoblog.DAL.Migrations;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using MediatR;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Internal;
+using Microsoft.Extensions.Configuration;
+using MimeKit;
+using MimeKit.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace Fotoblog.BLL.Services.EmailService
 {
@@ -28,7 +27,7 @@ namespace Fotoblog.BLL.Services.EmailService
             var emailBodyTemplate = File.ReadAllText(
                 Path.Combine(
                     Environment.CurrentDirectory,
-                    @"..\Fotoblog.Utils\Templates\Auth\reset-password-email.html"
+                    @"wwwroot\Templates\Auth\reset-password-email.html"
                     ));
 
             var emailBody = emailBodyTemplate.Replace("{{username}}", userName)
@@ -46,7 +45,7 @@ namespace Fotoblog.BLL.Services.EmailService
             var emailBodyTemplate = File.ReadAllText(
                 Path.Combine(
                     Environment.CurrentDirectory,
-                    @"..\Fotoblog.Utils\Templates\Auth\acc-confirmation-email.html"
+                    @"wwwroot\Templates\Auth\acc-confirmation-email.html"
                     ));
 
             var emailBody = emailBodyTemplate.Replace("{{username}}", userName)

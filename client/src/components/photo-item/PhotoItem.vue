@@ -65,7 +65,6 @@
                 if(!this.$refs.photo) return
 
                 this.isThumbnailLink = (this.$refs.photo.clientWidth<=config.photos.thumbnailWidth)?true:false
-                console.log(this.isThumbnailLink)
             }
         },
         computed:{

@@ -6,7 +6,10 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col>
+        <v-col
+          cols="12"
+          md="6"
+        >
           <div>
             <v-img
               :src="previewSrc"
@@ -28,7 +31,10 @@
 
           </div>
         </v-col>
-        <v-col>
+        <v-col
+          cols="12"
+          md="6"
+        >
           <v-form
             ref="form"
             v-model="valid"

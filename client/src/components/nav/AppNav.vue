@@ -78,9 +78,13 @@
         }
       },
       computed:{
-        isDrawer: function(){
-          if(this.$vuetify.breakpoint.name == 'xs' && this.drawer) return true
-          return false
+        isDrawer: {
+          get: function(){
+            return (this.$vuetify.breakpoint.name == 'xs' && this.drawer) ? true:false
+          },
+          set: function(val){
+            this.drawer = val
+          }
         },
         navItems: function(){
           return navigationItems.filter(

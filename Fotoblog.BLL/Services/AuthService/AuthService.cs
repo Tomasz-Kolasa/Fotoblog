@@ -5,7 +5,6 @@ using Fotoblog.BLL.Services.ServiceResultNS;
 using Fotoblog.DAL;
 using Fotoblog.DAL.Entities;
 using Fotoblog.Utils.ViewModels.Auth;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -90,7 +89,7 @@ namespace Fotoblog.BLL.Services.AuthService
         /// <returns>ServiceResult.Ok() if the email is send successfuly OR given email is not found.
         /// ServiceResult.Fail() if given email was found, but the try of sending email fails.
         /// </returns>
-        public async Task<ServiceResult> ResendEmail(string email)
+        public async Task<ServiceResult<string>> ResendEmail(string email)
         {
             var user = await _dbContext.UserEntities.FirstOrDefaultAsync(
                 u => u.Email == email.ToLower()
@@ -103,13 +102,13 @@ namespace Fotoblog.BLL.Services.AuthService
                     await _emailService.SendUserActivationLink(
                         user.UserName, user.EmailVerificationCode, user.Email);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    return ServiceResult.Fail(ErrorCodes.EmailConfirmationLinkNotSent);
+                    return ServiceResult<string>.Fail(ex.Message, ErrorCodes.EmailConfirmationLinkNotSent);
                 }
             }
 
-            return ServiceResult.Ok();
+            return ServiceResult<string>.Ok("ok");
         }
 
         public async Task<ServiceResult> ConfirmEmail(ConfirmEmailVm confirmEmailVm)

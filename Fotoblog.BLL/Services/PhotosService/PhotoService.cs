@@ -36,9 +36,10 @@ namespace Fotoblog.BLL.Services.PhotosService
             _thumbnailWidth = Int32.Parse(
                 AppConfig.GetSection("AppSettings:PhotosUpload:ThumbnailWidth").Value
                 );
+            SetLocation();
         }
 
-        public void SetLocation(string contentRootPath)
+        private void SetLocation()
         {
             var AppConfig = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
@@ -47,7 +48,7 @@ namespace Fotoblog.BLL.Services.PhotosService
             string uniquePhotoFolderName = Guid.NewGuid().ToString();
 
             _saveLocationAbsolute = Path.Combine(
-               contentRootPath, photosSaveFolder, uniquePhotoFolderName
+               Environment.CurrentDirectory, photosSaveFolder, uniquePhotoFolderName
                 );
 
             _saveLocationRelative = Path.Combine(
