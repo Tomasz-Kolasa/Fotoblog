@@ -2,7 +2,7 @@
     <v-row>
         <v-col
         v-if="!isLoadingTags"
-        class="d-flex align-center justify-end">
+        class="d-flex flex-wrap align-center justify-end">
             <v-checkbox
             v-for="tag in tags"
             :key="tag.id"

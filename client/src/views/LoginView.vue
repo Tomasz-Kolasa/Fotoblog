@@ -1,13 +1,12 @@
 <template>
     <v-container>
-        <v-row class="pt-15">
-            <v-col
-            :cols="$vuetify.breakpoint.name=='xs'?12:6"
+        <v-row class="pt-16">
+            <v-col :cols="12" sm="6"
             class="d-flex align-center justify-center"
             >
                 <h2 class="text-h4">zaloguj się</h2>
             </v-col>
-            <v-col :cols="$vuetify.breakpoint.name=='xs'?12:6">
+            <v-col :cols="12" sm="6">
                 <v-form
                 ref="form"
                 v-model="isFormValid"

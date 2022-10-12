@@ -2,7 +2,7 @@
   <div>
     <v-container>
       <v-row>
-        <v-col class="pt-15 text-h5 font-weight-thin font-italic">
+        <v-col class="pt-10 text-subtitle1 text-sm-h6 font-weight-thin font-italic">
           <q>Nie istnieją reguły opisujące dobrą fotografię,<br>są tylko dobre fotografie</q>
         </v-col>
       </v-row>

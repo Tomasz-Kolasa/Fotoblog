@@ -1,16 +1,17 @@
 <template>
   <v-container>
-    <v-row>
+    <v-row class="mt-16">
       <v-col
-        :cols="$vuetify.breakpoint.mobile?12:6"
+        :cols="12"
+        sm="6"
       >
-        <h2 class="text-h4 mt-5">Email weryfikacyjny</h2>
+        <h2 class="text-h4">Email weryfikacyjny</h2>
         <h3 class="text-h5 mt-5">wyślij ponownie email weryfikacyjny</h3>
         <p class="mt-5">jeśli istnieje konto z adresem email, który tutaj wpiszesz, wyślemy link aktywacyjny</p>
       </v-col>
       <v-col
-        :cols="$vuetify.breakpoint.mobile?12:6"
-        class="mt-5"
+        :cols="12"
+        sm="6"
       >
         <v-form
           v-model="isFormValid"

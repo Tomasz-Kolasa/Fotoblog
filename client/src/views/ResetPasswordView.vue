@@ -1,14 +1,18 @@
 <template>
     <v-container>
-      <v-row v-if="isSendLinkView">
+      <v-row
+      v-if="isSendLinkView"
+      class="mt-16">
         <v-col
-          :cols="$vuetify.breakpoint.mobile?12:6"
+          :cols="12"
+          sm="6"
         >
           <h2 class="text-h4 mt-5">resetuj hasło</h2>
           <p class="mt-5">podaj adres email podany przy rejestracji a wyślemy Ci link umożliwiający zmianę hasła</p>
         </v-col>
         <v-col
-          :cols="$vuetify.breakpoint.mobile?12:6"
+          :cols="12"
+          sm="6"
           class="mt-5"
         >
           <v-form
@@ -34,14 +38,17 @@
           </v-form>
         </v-col>
       </v-row>
-      <v-row v-if="isChangePasswordView">
+      <v-row
+      v-if="isChangePasswordView"
+      class="mt-16">
         <v-col
-          :cols="$vuetify.breakpoint.name=='xs'?12:6"
+          :cols="12"
+          sm="6"
           class="d-flex align-center justify-center"
         >
           <h2 class="text-h4">zmień hasło</h2>
         </v-col>
-        <v-col :cols="$vuetify.breakpoint.name=='xs'?12:6">
+        <v-col :cols="12" sm="6">
           <v-form
             v-model="isValid"
             :disabled="isLoading"

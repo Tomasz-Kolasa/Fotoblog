@@ -1,8 +1,8 @@
 <template>
     <v-container>
         <v-row>
-            <v-col>
-                <h4 class="text-h4 text-center mt-16">do zobaczenia ;)</h4>
+            <v-col class="pt-16">
+                <h4 class="text-h5 text-center">do zobaczenia...</h4>
             </v-col>
         </v-row>
     </v-container>

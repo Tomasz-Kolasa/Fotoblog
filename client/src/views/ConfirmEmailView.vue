@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row>
+    <v-row class="mt-16">
       <v-col v-if="isLoading">
         <h2 class="text-h2 my-10">Hello</h2>
         <h3 class="text-h4">
