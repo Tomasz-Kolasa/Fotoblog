@@ -1,0 +1,17 @@
+$kind: collection
+variables:
+  jwtToken: ""
+  validPwd: tomtom
+  validUsername: tomtom
+auth:
+  - id: b54f972f-5e56-4f32-afed-02cea01aefde
+    type: jwt
+    name: jwt auth
+    credentials:
+      algorithm: HS256
+      isSecretBase64Encoded: false
+      addTokenTo: header
+      payload: "{}"
+      queryParamKey: token
+      header: "{}"
+      headerPrefix: Bearer

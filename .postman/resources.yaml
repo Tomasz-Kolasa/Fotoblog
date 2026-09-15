@@ -1,0 +1,15 @@
+workspace:
+  id: c6ddf388-c575-4ac3-9deb-e75ba6b5c583
+localResources:
+  specs:
+    - ../fotoblog-swagger.json
+cloudResources:
+  collections:
+    ../postman/collections/Fotoblog API: 16898230-d2f4a50a-397e-4abf-a2f2-e46251973e11
+  environments:
+    ../postman/environments/Local.environment.yaml: 16898230-2825b141-6efe-4758-b85d-c9a8df6b657a
+    ../postman/environments/PROD.environment.yaml: 16898230-a8da5355-7cb1-4374-a92a-b1bfaeb020aa
+  globals:
+    ../postman/globals/workspace.globals.yaml: 7bf012c7-7c59-447a-80bd-015590ecdf22
+  specs:
+    ../fotoblog-swagger.json: de1967c6-1b11-4776-a86e-dd839c6a9bcd
