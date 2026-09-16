@@ -1,0 +1,40 @@
+$kind: http-request
+url: "{{baseUrl}}/Auth/Login"
+method: POST
+body:
+  type: json
+  content: '{"password":"{{validPwd}}","userName":"wrongUsername"}'
+scripts:
+  - type: afterResponse
+    code: |
+      let wrongUserNameIterData = pm.iterationData.get("wrongUserName"); // get the wrong username from the iteration data
+
+
+      pm.test("Status code is 400", function () {
+          //pm.response.to.have.status(400);
+          pm.response.to.have.status(wrongUserNameIterData.responseData.httpResponseCode);
+      });
+
+      pm.test("Response content-type is application/json", function () {
+          pm.response.to.have.header("Content-Type");
+          pm.expect(pm.response.headers.get("Content-Type")).to.include("application/json");
+      });
+
+      const jsonData = pm.response.json();
+
+      pm.test("Response body has expected structure", function () {
+          pm.expect(jsonData).to.have.property("errorCode");
+          pm.expect(jsonData).to.have.property("status");
+          pm.expect(jsonData).to.have.property("data");
+      });
+
+      pm.test("JWT Token received", function () {
+          pm.expect(jsonData.errorCode).to.eql(40);
+          pm.expect(jsonData.status).to.be.false;
+          pm.expect(jsonData.data).to.be.null;
+      });
+    language: text/javascript
+  - type: beforeRequest
+    code: pm.variables.set("wrongUserNameIterData", pm.iterationData.get("wrongUserName"));
+    language: text/javascript
+order: 2000
