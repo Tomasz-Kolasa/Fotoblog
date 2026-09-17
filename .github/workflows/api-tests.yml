@@ -33,7 +33,7 @@ jobs:
         run: |
           postman collection run "./postman/collections/Fotoblog API" \
             -e ./postman/environments/PROD.environment.yaml \
-            -d ./postman/data/test_data.json \
+            -d ./postman/data/auth_test_data.json \
             --env-var "validUsername=$CI_VALID_USERNAME" \
             --env-var "validPwd=$CI_VALID_PASSWORD" \
             --reporters cli
