@@ -1,0 +1,41 @@
+$kind: http-request
+url: "{{baseUrl}}/Auth/RegisterAdmin"
+method: POST
+body:
+  type: json
+  content: "{{requestData}}"
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: "const responseData = pm.variables.get(\"responseData\")\r
+
+      \r
+
+      pm.test(`Response code is ${responseData.httpResponseCode}`, function () {\r
+
+      \    pm.expect(pm.response.code).to.be.eql(responseData.httpResponseCode);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response status should be Unauthorized\", ()=>{\r
+
+      \   pm.expect(pm.response.status).to.be.eql(\"Unauthorized\");\r
+
+      });"
+    language: text/javascript
+  - type: beforeRequest
+    code: "pm.variables.set(\"requestData\", JSON.stringify(\r
+
+      \    pm.iterationData.get(\"RegisterAdmin_Endpoint\").Unauthorized_Request.requestData\r
+
+      \    ));\r
+
+      \r
+
+      pm.variables.set(\"responseData\", pm.iterationData.get(\"RegisterAdmin_Endpoint\").Unauthorized_Request.responseData);"
+    language: text/javascript
+examples: .resources/RegisterAdmin - Unauthorized.resources/examples
+order: 1789632777887

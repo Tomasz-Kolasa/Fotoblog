@@ -1,0 +1,16 @@
+$kind: collection
+variables:
+  - key: jwtToken
+    secret: true
+    disabled: false
+  - key: validPwd
+    value: REPLACE_IN_CI
+    disabled: false
+  - key: validUsername
+    value: REPLACE_IN_CI
+    disabled: false
+  - key: validFormedEmail
+    value: example@gmail.com
+    disabled: false
+auth:
+  type: noauth
