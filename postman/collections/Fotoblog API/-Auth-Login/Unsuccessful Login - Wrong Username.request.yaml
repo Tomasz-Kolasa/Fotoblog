@@ -4,6 +4,8 @@ method: POST
 body:
   type: json
   content: '{"password":"{{validPwd}}","userName":"{{userName}}"}'
+auth:
+  type: noauth
 scripts:
   - type: afterResponse
     code: "const iterData = pm.variables.get(\"iterData\");\r

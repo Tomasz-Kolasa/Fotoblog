@@ -13,14 +13,4 @@ variables:
     value: example@gmail.com
     disabled: false
 auth:
-  - id: b498dc21-c016-4a1b-a2ef-b4ccab7250fb
-    type: jwt
-    name: jwt auth
-    credentials:
-      algorithm: HS256
-      isSecretBase64Encoded: false
-      addTokenTo: header
-      payload: "{}"
-      queryParamKey: token
-      header: "{}"
-      headerPrefix: Bearer
+  type: noauth

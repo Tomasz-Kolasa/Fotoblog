@@ -4,6 +4,8 @@ method: POST
 body:
   type: json
   content: '{"password":"{{validPwd}}","userName":"{{validUsername}}"}'
+auth:
+  type: noauth
 scripts:
   - type: afterResponse
     code: |-

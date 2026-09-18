@@ -4,6 +4,8 @@ method: POST
 body:
   type: json
   content: "{{requestData}}"
+auth:
+  type: noauth
 scripts:
   - type: afterResponse
     code: "const responseData = pm.variables.get(\"responseData\")\r
