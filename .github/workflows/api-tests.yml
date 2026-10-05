@@ -1,0 +1,39 @@
+name: API Regression Tests
+
+on:
+  push:
+    branches: [ "master", "main", "features/API-tests" ]
+  pull_request:
+    branches: [ "master", "main" ]
+
+jobs:
+  run-api-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Download repo files for runner
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Install offical Postman CLI (yaml support)
+      - name: Install Postman CLI
+        run: |
+          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+
+      # 3. Verify Postman CLI installation
+      - name: Check Postman CLI
+        run: postman --version
+
+      # 4. Run the YAML collection with securely injected data
+      - name: Run Postman Collection
+        env:
+          # Get the secrets from GitHub Actions and pass them as environment variables to the Postman CLI
+          CI_VALID_USERNAME: ${{ secrets.VALID_USER_NAME }}
+          CI_VALID_PASSWORD: ${{ secrets.VALID_USER_PASSWORD }}
+        run: |
+          postman collection run "./postman/collections/Fotoblog API" \
+            -e ./postman/environments/PROD.environment.yaml \
+            -d ./postman/data/auth_test_data.json \
+            --env-var "validUsername=$CI_VALID_USERNAME" \
+            --env-var "validPwd=$CI_VALID_PASSWORD" \
+            --reporters cli

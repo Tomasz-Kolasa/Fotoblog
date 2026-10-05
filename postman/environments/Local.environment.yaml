@@ -1,0 +1,6 @@
+name: Local
+color: null
+values:
+  - key: baseUrl
+    value: https://localhost:5000/api/
+    enabled: true

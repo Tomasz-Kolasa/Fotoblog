@@ -1,0 +1,43 @@
+[
+	{
+		"Login_Endpoint":{
+			"WrongUserName_Request":{
+				"requestData":{"userName":"minLen"},
+				"responseData":{"httpResponseCode":400, "errorCode":40, "status":false}
+			}
+		},
+		"RegisterAdmin_Endpoint":
+			{
+				"Unauthorized_Request": {
+					"requestData":{
+						"UserName": "MaxLengthName20Chars",
+						"Email": "example@example.com",
+						"Password": "01234567890123456789",
+						"ConfirmPassword": "01234567890123456789"
+					},
+					"responseData":{"httpResponseCode":401}
+				}
+		}
+	},
+	{
+		"Login_Endpoint":{
+			"WrongUserName_Request":{
+				"requestData":{"userName":"maxLen userName xxxx"},
+				"responseData":{"httpResponseCode":400, "errorCode":40, "status":false}
+			}
+		},
+
+		"RegisterAdmin_Endpoint":
+			{
+				"Unauthorized_Request": {
+					"requestData":{
+						"UserName": "minLen",
+						"Email": "example@gmail.com",
+						"Password": "abc!A4",
+						"ConfirmPassword": "abc!A4"
+					},
+					"responseData":{"httpResponseCode":401}
+			}
+		}
+	}
+]
