@@ -2,7 +2,7 @@ name: Automated Tests
 
 on:
   push:
-    branches: [ "master", "main", "features/API-tests", "robot-API-E2E-tests" ]
+    branches: [ "master", "main", "features/API-tests", "features/robot-API-E2E-tests" ]
 
   pull_request:
     branches: [ "master", "main" ]
@@ -63,7 +63,14 @@ jobs:
 
       - name: Run Robot Framework API tests
         working-directory: robot-tests
-        run: poetry run robot tests/api --outputdir results tests/api
+        run: poetry run robot --outputdir results tests/api
+
+      - name: Upload Robot Framework results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: robot-api-results
+          path: robot-tests/results/
 
 
   robot-e2e-tests:
@@ -92,4 +99,11 @@ jobs:
 
       - name: Run Robot Framework E2E tests
         working-directory: robot-tests
-        run: poetry run robot tests/e2e --outputdir results tests/e2e
+        run: poetry run robot --outputdir results tests/e2e
+
+      - name: Upload Robot Framework results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: robot-e2e-results
+          path: robot-tests/results/
