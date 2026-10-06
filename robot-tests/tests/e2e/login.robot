@@ -1,14 +1,17 @@
 *** Settings ***
-Library    SeleniumLibrary
 
 Resource    ../../resources/variables/e2e_urls.resource
+Resource    ../../resources/e2e/keywords.resource
+
 
 *** Variables ***
-${BROWSER}    chrome
+
 ${invalid_username}    invalid_user
 ${invalid_password}    invalid_pass
 
+
 *** Test Cases ***
+
 Invalid Login Shows Error And Keeps User On Login Page
     [Documentation]    Verifies invalid credentials show an error toast without leaving the login page
     [Tags]    E2E    login
@@ -21,8 +24,9 @@ Invalid Login Shows Error And Keeps User On Login Page
 
 
 *** Keywords ***
+
 The User Is On The Login Page
-    Open Browser    ${LOGIN_PAGE}    ${BROWSER}
+    Open Chrome Browser    ${LOGIN_PAGE}
 
 The User Submits Invalid Credentials
     Input Text    css:input[placeholder="login..."]    ${invalid_username}
@@ -30,7 +34,7 @@ The User Submits Invalid Credentials
     Click Element    xpath://button[normalize-space(.)="zaloguj"]
 
 The Invalid Login Error Toast Should Be Displayed
-    Wait Until Element Is Visible    css:.v-toast__text
+    Wait Until Element Is Visible    css:.v-toast__text    10s
     Element Should Contain    css:.v-toast__text    Nieprawidłowe dane logowania
 
 The User Should Remain On The Login Page
