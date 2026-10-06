@@ -2,7 +2,7 @@ name: Automated Tests
 
 on:
   push:
-    branches: [ "master", "main", "features/API-tests", "robot-API-E2E-tests" ]
+    branches: [ "master", "main", "features/API-tests", "features/robot-API-E2E-tests" ]
 
   pull_request:
     branches: [ "master", "main" ]
