@@ -42,8 +42,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      VALID_USERNAME: ${{ secrets.VALID_USER_NAME }}
-      VALID_PASSWORD: ${{ secrets.VALID_USER_PASSWORD }}
+      VALID_USER_NAME: ${{ secrets.VALID_USER_NAME }}
+      VALID_USER_PASSWORD: ${{ secrets.VALID_USER_PASSWORD }}
 
     steps:
       - name: Checkout repository
@@ -63,7 +63,7 @@ jobs:
 
       - name: Run Robot Framework API tests
         working-directory: robot-tests
-        run: poetry run robot tests/api
+        run: poetry run robot tests/api --outputdir results tests/api
 
 
   robot-e2e-tests:
@@ -71,8 +71,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      VALID_USERNAME: ${{ secrets.VALID_USER_NAME }}
-      VALID_PASSWORD: ${{ secrets.VALID_USER_PASSWORD }}
+      VALID_USER_NAME: ${{ secrets.VALID_USER_NAME }}
+      VALID_USER_PASSWORD: ${{ secrets.VALID_USER_PASSWORD }}
 
     steps:
       - name: Checkout repository
@@ -92,4 +92,4 @@ jobs:
 
       - name: Run Robot Framework E2E tests
         working-directory: robot-tests
-        run: poetry run robot tests/e2e
+        run: poetry run robot tests/e2e --outputdir results tests/e2e
