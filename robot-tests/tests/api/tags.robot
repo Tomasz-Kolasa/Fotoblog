@@ -2,7 +2,7 @@
 Library    RequestsLibrary
 Library    Collections
 
-Resource    ../resources/api/auth.resource
+Resource    ../../resources/api/auth.resource
 
 Suite Setup     Set Bearer Token And Create API Session
 
