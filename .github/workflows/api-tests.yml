@@ -65,6 +65,13 @@ jobs:
         working-directory: robot-tests
         run: poetry run robot tests/api --outputdir results tests/api
 
+      - name: Upload Robot Framework results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: robot-api-results
+          path: robot-tests/results/
+
 
   robot-e2e-tests:
     name: Robot Framework E2E Tests
@@ -93,3 +100,10 @@ jobs:
       - name: Run Robot Framework E2E tests
         working-directory: robot-tests
         run: poetry run robot tests/e2e --outputdir results tests/e2e
+
+      - name: Upload Robot Framework results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: robot-e2e-results
+          path: robot-tests/results/
