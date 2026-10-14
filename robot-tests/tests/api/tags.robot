@@ -1,6 +1,7 @@
 *** Settings ***
 Library    RequestsLibrary
 Library    Collections
+Library    ../../resources/api/CustomLibrary.py
 
 Resource    ../../resources/api/auth.resource
 
@@ -35,6 +36,17 @@ Get All Tags Should Contain Relevant Status Fields And Newly Added Tag
     Tag Should Be Present    ${response.text}    ${New-Tag-Name}
 
 
+Delete Tag Response Should Be 200 And Tag Should Not Be Present
+    [Documentation]    Deletes the newly added tag using DELETE
+    [Tags]    API    tags
+    ${response}    GET On Session   fotoblog    ${GET_ALL_TAGS_ENDPOINT}
+    Should Be Equal As Strings    ${response.status_code}    200
+    ${id}    Get Tag ID    ${response.json()['data']}    ${New-Tag-Name}
+    Tag Should Be Present    ${response.text}    ${New-Tag-Name}
+    Delete Tag    ${id}
+    Tag Should Not Be Present    ${id}
+
+
 *** Keywords ***
 Response Should Contain Relevant Status Fields
     [Arguments]    ${Response-Text}
@@ -56,11 +68,8 @@ Delete Tag If Present
     ...    To remove the tag, we will first get all the tags and check if the tag is present. If it is present, we will delete it using the delete endpoint.
     ${response}    GET On Session   fotoblog    ${GET_ALL_TAGS_ENDPOINT}
     Status Should Be    200    ${response}
-    ${tags}    Set Variable    ${response.json()['data']}
-    FOR    ${tag}    IN    @{tags}
-        ${tag_name}    Set Variable    ${tag['name']}
-        Run Keyword If    '${tag_name}' == '${Tag-Name}'    Delete Tag    ${tag['id']}
-    END
+    ${id}    Get Tag ID    ${response.json()['data']}    ${Tag-Name}
+    Run Keyword If    '${id}' != 'None'    Delete Tag    ${id}
 
 Delete Tag
     [Arguments]    ${Tag-ID}
@@ -73,3 +82,12 @@ Set Bearer Token And Create API Session
     [Documentation]    Creates an API session and sets the bearer token for authentication
     Login And Set Bearer Token
     Create Session    fotoblog    ${BASE_URL}    headers={"Authorization": "Bearer ${BEARER_TOKEN}"}
+
+Tag Should Not Be Present
+    [Arguments]    ${tag_id}
+    [Documentation]    Checks if the response does not contain the tag with the given ID
+    ${response}    GET On Session   fotoblog    ${GET_ALL_TAGS_ENDPOINT}
+    Status Should Be    200    ${response}
+    ${response_json}    Evaluate    json.loads('''${response.text}''')    modules=json
+    ${found}    Evaluate    any(item['id'] == '${tag_id}' for item in ${response_json['data']})
+    Should Not Be True    ${found}
