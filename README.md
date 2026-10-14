@@ -1,3 +1,4 @@
+[![Automated Tests](https://github.com/Tomasz-Kolasa/Fotoblog/actions/workflows/api-tests.yml/badge.svg)](https://github.com/Tomasz-Kolasa/Fotoblog/actions/workflows/api-tests.yml)
 # Fotoblog
 
 Fotoblog is a web application that allows users to publish and manage photos. Users can add photos, descriptions and tags, and browse published content.
