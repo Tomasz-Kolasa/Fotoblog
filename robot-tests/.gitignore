@@ -1,0 +1,12 @@
+# Python virtual environment
+.venv/
+
+# Robot Framework test results
+results/
+
+# VS Code
+.vscode/
+
+# Python cache
+__pycache__/
+*.py[cod]
