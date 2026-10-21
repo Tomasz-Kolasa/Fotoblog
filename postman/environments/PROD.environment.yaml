@@ -1,6 +1,4 @@
 name: PROD
-color: null
 values:
   - key: baseUrl
-    value: https://fotoblog-api-app.azurewebsites.net/api/
-    enabled: true
+    value: https://fotoblog-api-app.azurewebsites.net/api
