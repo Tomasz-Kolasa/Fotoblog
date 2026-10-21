@@ -1,0 +1,52 @@
+$kind: http-request
+url: "{{baseUrl}}/Photos/AddNew"
+method: POST
+body:
+  type: formdata
+  content:
+    - type: text
+      key: File
+      src:
+        - postman/data/photos/1.jpg
+      description: ""
+      disabled: false
+    - type: text
+      key: Title
+      value: Chestnuts
+      description: ""
+      disabled: false
+    - type: text
+      key: Description
+      value: Autumn is here
+      description: ""
+      disabled: false
+auth:
+  type: inherit
+  credentials:
+    id: collection-a1f01794Ea31C848A6D9f9fF-bearer
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 200\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response body has correct structure and values\", function () {\r
+
+      \    pm.response.to.have.jsonBody({\r
+
+      \        \"errorCode\": null,\r
+
+      \        \"status\": true\r
+
+      \    });\r
+
+      });"
+    language: text/javascript
+  - type: beforeRequest
+    code: pm.variables.set("testImgPath","./postman/data/photos");
+    language: text/javascript
+order: 1789657020748
