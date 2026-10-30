@@ -5,6 +5,9 @@
 
 # Manually added
 photos/
+!postman/data/photos/
+postman/data/photos/*
+!postman/data/photos/*.jpg
 
 # User-specific files
 *.rsuser

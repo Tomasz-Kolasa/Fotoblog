@@ -13,4 +13,6 @@ variables:
     value: example@gmail.com
     disabled: false
 auth:
-  type: noauth
+  type: bearer
+  credentials:
+    token: "{{jwtToken}}"
