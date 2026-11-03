@@ -1,8 +1,8 @@
 *** Settings ***
 
 Library    RequestsLibrary
-Resource    ../variables/api-urls.resource
-Resource    ../variables/auth.resource
+Resource    ../common_api_e2e/api-urls.resource
+Resource    ../common_api_e2e/auth.resource
 
 
 *** Keywords ***
@@ -17,7 +17,7 @@ Login And Set Bearer Token
 
     Status Should Be    200    ${response}
 
-    ${token}        Set Variable    ${response.json()['data']}
+    VAR    ${token}    ${response.json()['data']}
     Should Not Be Empty   ${token}    The bearer token should not be empty after login
 
     Set Suite Variable    ${BEARER_TOKEN}    ${token}

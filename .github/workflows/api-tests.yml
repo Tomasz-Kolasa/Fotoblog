@@ -29,12 +29,20 @@ jobs:
           CI_VALID_USERNAME: ${{ secrets.VALID_USER_NAME }}
           CI_VALID_PASSWORD: ${{ secrets.VALID_USER_PASSWORD }}
         run: |
+          mkdir -p ./postman/test_report
           postman collection run "./postman/collections/Fotoblog API" \
           -e ./postman/environments/PROD.environment.yaml \
           -d ./postman/data/auth_test_data.json \
           --env-var "validUsername=$CI_VALID_USERNAME" \
           --env-var "validPwd=$CI_VALID_PASSWORD" \
-          --reporters cli
+          --reporters cli > ./postman/test_report/postman_report.txt
+
+      - name: Upload Postman Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: postman-report
+          path: ./postman/test_report/postman_report.txt
 
 
   robot-api-tests:
