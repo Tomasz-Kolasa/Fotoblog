@@ -3,7 +3,7 @@ Library    RequestsLibrary
 Library    Collections
 Library    ../../resources/api/CustomLibrary.py
 
-Resource    ../../resources/api/auth.resource
+Resource    ../../resources/api/base.resource
 
 Suite Setup     Set Bearer Token And Create API Session
 

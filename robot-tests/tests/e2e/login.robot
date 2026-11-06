@@ -1,18 +1,14 @@
 *** Settings ***
 
-Resource    ../../resources/variables/e2e_urls.resource
-Resource    ../../resources/e2e/keywords.resource
-Resource    ../../resources/variables/auth.resource
+Resource    ../../resources/e2e/base_page.resource
+Resource    ../../resources/e2e/pages/login_page.resource
+Resource    ../../resources/common_api_e2e/auth.resource
 
 
 *** Variables ***
 
 ${invalid_username}    invalid_user
 ${invalid_password}    invalid_pass
-
-${username_input_selector}    css:input[placeholder="login..."]
-${password_input_selector}    css:input[placeholder="hasło..."]
-${login_button_selector}    xpath://button[normalize-space(.)="zaloguj"]
 
 
 *** Test Cases ***
@@ -93,40 +89,34 @@ Successful Login Redirects Main Page And A Success Toast Should Be Displayed
 
 *** Keywords ***
 
-The User Is On The Login Page
-    Open Chrome Browser    ${LOGIN_PAGE}
-
 The User Submits Invalid Credentials
-    Input Text    ${username_input_selector}    ${invalid_username}
-    Input Text    ${password_input_selector}    ${invalid_password}
-    Click Element    ${login_button_selector}
+    Input Text    ${LOGIN_INPUT_USERNAME}    ${invalid_username}
+    Input Text    ${LOGIN_INPUT_PASSWORD}    ${invalid_password}
+    Click Element    ${LOGIN_BUTTON_ZALOGUJ}
 
 The Invalid Login Error Toast Should Be Displayed
-    Wait Until Element Is Visible    css:.v-toast__text    10s
-    Element Should Contain    css:.v-toast__text    Nieprawidłowe dane logowania
-
-The User Should Remain On The Login Page
-    Location Should Be    ${LOGIN_PAGE}
+    Wait Until Element Is Visible    ${LOGIN_ELEMENT_TOAST_TXT}    10s
+    Element Should Contain    ${LOGIN_ELEMENT_TOAST_TXT}    Nieprawidłowe dane logowania
 
 The User Enters A Proper Length Username
-    Input Text    ${username_input_selector}    valid_len_username
+    Input Text    ${LOGIN_INPUT_USERNAME}    valid_len_username
 
 The User Submits Too Short Password
-    Input Text    ${password_input_selector}    short
+    Input Text    ${LOGIN_INPUT_PASSWORD}    short
 
 The Password Length Hint Should Be Displayed
     [Arguments]    ${hint_message}
-    Wait Until Element Is Visible    css:.v-messages__message    10s
-    Element Should Contain    css:.v-messages__message    ${hint_message}
+    Wait Until Element Is Visible    ${LOGIN_FORM_HINT_MSG}    10s
+    Element Should Contain    ${LOGIN_FORM_HINT_MSG}    ${hint_message}
 
 The Login Button Should Be Disabled
-    Element Should Be Disabled    ${login_button_selector}
+    Element Should Be Disabled    ${LOGIN_BUTTON_ZALOGUJ}
 
 The User Enters Too Short Username
-    Input Text    ${username_input_selector}    short
+    Input Text    ${LOGIN_INPUT_USERNAME}    short
 
 The User Submits Proper Length Password
-    Input Text    ${password_input_selector}    valid_len_password    
+    Input Text    ${LOGIN_INPUT_PASSWORD}    valid_len_password    
 
 Username Length Hint Should Be Displayed
     [Arguments]    ${hint_message}
@@ -134,23 +124,23 @@ Username Length Hint Should Be Displayed
     Element Should Contain    css:.v-messages__message    ${hint_message}
 
 The User Enters Too Long Username
-    Input Text    ${username_input_selector}    this_is_a_very_long_username_exceeding_the_maximum_length
+    Input Text    ${LOGIN_INPUT_USERNAME}    this_is_a_very_long_username_exceeding_the_maximum_length
 
 The User Submits Too Long Password
-    Input Text    ${password_input_selector}    this_is_a_very_long_password_exceeding_the_maximum_length
+    Input Text    ${LOGIN_INPUT_PASSWORD}    this_is_a_very_long_password_exceeding_the_maximum_length
 
 The User Subbmits Valid Username And Valid Password
-    Input Text    ${username_input_selector}    ${USERNAME.value}
-    Input Text    ${password_input_selector}    ${PASSWORD.value}
-    Click Element    ${login_button_selector}
+    Input Text    ${LOGIN_INPUT_USERNAME}    ${USERNAME.value}
+    Input Text    ${LOGIN_INPUT_PASSWORD}    ${PASSWORD.value}
+    Click Element    ${LOGIN_BUTTON_ZALOGUJ}
 
 The User Should Be Redirected To The Main Page
     Wait Until Location Is    ${BASE_URL}/    10s
     Location Should Be    ${BASE_URL}/
 
 The Successful Login Toast Should Be Displayed
-    Wait Until Element Is Visible    css:.v-toast__text    10s
-    Element Should Contain    css:.v-toast__text    Zalogowano!
+    Wait Until Element Is Visible    ${LOGIN_ELEMENT_TOAST_TXT}    10s
+    Element Should Contain    ${LOGIN_ELEMENT_TOAST_TXT}    Zalogowano!
 
 Log Url Teardown
     Run Keyword If Test Failed    Log Url
@@ -159,4 +149,4 @@ Log Url Teardown
 Log Url
     [Documentation]    This keyword is used to test the current URL
     ${current_url}=    Get Location
-    Log    Aktualny URL to: ${current_url}
+    Log    Current URL to: ${current_url}
