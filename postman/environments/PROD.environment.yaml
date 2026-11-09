@@ -1,4 +1,4 @@
 name: PROD
 values:
   - key: baseUrl
-    value: https://fotoblog-api-app.azurewebsites.net/api
+    value: 'https://fotoblog-api-app.azurewebsites.net/api'

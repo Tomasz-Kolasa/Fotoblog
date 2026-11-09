@@ -12,6 +12,21 @@ variables:
   - key: validFormedEmail
     value: example@gmail.com
     disabled: false
+  - key: photoTitle
+    value: Chestnuts
+    disabled: false
+  - key: photoDescription
+    value: Autumn is here
+    disabled: false
+  - key: photoIdToDelete
+    value: ""
+    disabled: false
+  - key: foundTestPhotosIds
+    value: ""
+    disabled: false
+  - key: json_web_token_0xzw
+    secret: true
+    disabled: false
 auth:
   type: bearer
   credentials:
