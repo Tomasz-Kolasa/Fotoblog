@@ -1,0 +1,43 @@
+$kind: http-request
+url: "{{baseUrl}}/Photos/Delete?id={{photoIdToDelete}}"
+method: DELETE
+queryParams:
+  id: "{{photoIdToDelete}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 200\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });"
+    language: text/javascript
+  - type: beforeRequest
+    code: "const foundTestPhotosIds = JSON.parse(pm.collectionVariables.get(\"foundTestPhotosIds\"));\r
+
+      \r
+
+      if(foundTestPhotosIds.length > 0) {\r
+
+      \    pm.collectionVariables.set(\"photoIdToDelete\", foundTestPhotosIds.pop());\r
+
+      \r
+
+      \    if (foundTestPhotosIds.length > 0) {\r
+
+      \        pm.collectionVariables.set(\"foundTestPhotosIds\", JSON.stringify(foundTestPhotosIds));\r
+
+      \        pm.execution.setNextRequest(pm.execution.location.current);     \r
+
+      \    } else {\r
+
+      \        // no more photos to delete, proceed to next request after deleting this one\r
+
+      \    }    \r
+
+      } else {\r
+
+      \    pm.execution.skipRequest();\r
+
+      }"
+    language: text/javascript
+order: 1752
