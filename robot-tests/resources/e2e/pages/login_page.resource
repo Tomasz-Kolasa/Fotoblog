@@ -19,3 +19,9 @@ The User Is On The Login Page
 
 The User Should Remain On The Login Page
     Location Should Be    ${LOGIN_PAGE}
+
+Login With Credentials
+    [Arguments]    ${username}    ${password}
+    Input Text    ${LOGIN_INPUT_USERNAME}    ${username}
+    Input Text    ${LOGIN_INPUT_PASSWORD}    ${password}
+    Click Element    ${LOGIN_BUTTON_ZALOGUJ}
