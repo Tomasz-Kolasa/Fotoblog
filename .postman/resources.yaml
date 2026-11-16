@@ -1,8 +1,12 @@
 workspace:
   id: c6ddf388-c575-4ac3-9deb-e75ba6b5c583
+
 localResources:
   specs:
     - ../fotoblog-swagger.json
+
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
 cloudResources:
   collections:
     ../postman/collections/Fotoblog API: 16898230-d2f4a50a-397e-4abf-a2f2-e46251973e11

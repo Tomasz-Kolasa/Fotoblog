@@ -1,0 +1,19 @@
+$kind: collection
+name: /Tags/
+description: |-
+  **This scenario verifies /Tags/ endpoint.**
+
+  Sequence logic:
+
+  1. Add New Tag — creates a tag named "TestTag" and saves the returned ID to the collection variable `{{tagId}}`.
+      
+  2. Get All Tags — retrieves the list of tags and verifies that the new tag is present in the list.
+      
+  3. Update Tag — changes the tag name to "TestTagUpdated," using `{{tagId}}` in the request body.
+      
+  4. Remove Tag — deletes the tag using the path variable `{{tagId}}`; if `{{tagId}}` is not set, the request is skipped (`skipRequest`).
+      
+
+    
+  The tests verify: a 200 status code, a JSON `Content-Type`, the response structure (`errorCode`, `status`, `data`), and the accuracy of the business data. The `tagId` variable is automatically cleared after the tag is deleted.
+order: 7146
