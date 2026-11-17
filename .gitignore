@@ -8,6 +8,7 @@ photos/
 !postman/data/photos/
 postman/data/photos/*
 !postman/data/photos/*.jpg
+!robot-tests/test-data/*
 
 # User-specific files
 *.rsuser
@@ -356,5 +357,4 @@ MigrationBackup/
 .ionide/
 /client/.gitignore
 /client/package-lock.json
-Rady Konrada.docx
 azure.txt
