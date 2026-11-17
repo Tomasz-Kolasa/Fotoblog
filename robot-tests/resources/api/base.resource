@@ -21,3 +21,9 @@ Login And Set Bearer Token
     Should Not Be Empty   ${token}    The bearer token should not be empty after login
 
     Set Suite Variable    ${BEARER_TOKEN}    ${token}
+
+
+Set Bearer Token And Create API Session
+    [Documentation]    Creates an API session and sets the bearer token for authentication
+    Login And Set Bearer Token
+    Create Session    fotoblog    ${BASE_URL}    headers={"Authorization": "Bearer ${BEARER_TOKEN}"}
