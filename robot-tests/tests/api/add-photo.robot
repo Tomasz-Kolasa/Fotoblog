@@ -8,7 +8,7 @@ NOTE:
 
 *** Settings ***
 Library    OperatingSystem
-Resource   ..${/}resources${/}api${/}base.resource
+Resource   ${CURDIR}${/}..${/}..${/}resources${/}api${/}base.resource
 
 Suite Setup    Set Bearer Token And Create API Session
 Suite Teardown    Clean Up Test Suit Activities
