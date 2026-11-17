@@ -1,0 +1,62 @@
+$kind: http-request
+url: "{{baseUrl}}/Tags/GetAll"
+method: GET
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status code is 200", function () {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Content-Type is application/json", function () {
+          pm.response.to.have.header("Content-Type");
+          pm.expect(pm.response.headers.get("Content-Type")).to.include("application/json");
+      });
+
+      const jsonData = pm.response.json();
+
+      pm.test("Response has expected structure", function () {
+          pm.expect(jsonData).to.have.property("errorCode");
+          pm.expect(jsonData).to.have.property("status");
+          pm.expect(jsonData).to.have.property("data");
+      });
+
+      pm.test("Response status is true and no error", function () {
+          pm.expect(jsonData.errorCode).to.be.null;
+          pm.expect(jsonData.status).to.be.true;
+      });
+
+      pm.test("Response data is an array", function () {
+          pm.expect(jsonData.data).to.be.an("array");
+      });
+
+      pm.test("Each tag has expected properties", function () {
+          jsonData.data.forEach(tag => {
+              pm.expect(tag).to.have.property("id");
+              pm.expect(tag).to.have.property("name");
+              pm.expect(tag.id).to.be.a("number");
+              pm.expect(tag.name).to.be.a("string");
+          });
+      });
+
+      pm.test("Response contains the newly added test tag", function () {
+          const tagName = pm.collectionVariables.get("testTagName");
+          if (tagName) {
+              const found = jsonData.data.find(tag => {
+                  if(tag.name === String(tagName)){
+                      pm.collectionVariables.set("testTagId", tag.id); // needed to update tag name in another request
+                      return true;
+                  } else {
+                      return false;
+                  }
+                  });
+              pm.expect(found).to.not.be.undefined;
+          }
+      });
+    language: text/javascript
+  - type: beforeRequest
+    code: ""
+    language: text/javascript
+order: 2000

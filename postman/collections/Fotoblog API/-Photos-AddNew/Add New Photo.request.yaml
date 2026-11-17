@@ -1,10 +1,12 @@
 $kind: http-request
 url: "{{baseUrl}}/Photos/AddNew"
 method: POST
+headers:
+  Authorization: Bearer {{jwtToken}}
 body:
   type: formdata
   content:
-    - type: text
+    - type: file
       key: File
       src:
         - postman/data/photos/1.jpg
@@ -12,18 +14,16 @@ body:
       disabled: false
     - type: text
       key: Title
-      value: Chestnuts
+      value: "{{photoTitle}}"
       description: ""
       disabled: false
     - type: text
       key: Description
-      value: Autumn is here
+      value: "{{photoDescription}}"
       description: ""
       disabled: false
 auth:
-  type: inherit
-  credentials:
-    id: collection-a1f01794Ea31C848A6D9f9fF-bearer
+  type: noauth
 scripts:
   - type: afterResponse
     code: "pm.test(\"Status code is 200\", function () {\r
@@ -47,6 +47,6 @@ scripts:
       });"
     language: text/javascript
   - type: beforeRequest
-    code: pm.variables.set("testImgPath","./postman/data/photos");
+    code: ""
     language: text/javascript
 order: 1789657020748
