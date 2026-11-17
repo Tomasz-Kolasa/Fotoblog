@@ -6,6 +6,7 @@ Library    ../../resources/api/CustomLibrary.py
 Resource    ../../resources/api/base.resource
 
 Suite Setup     Set Bearer Token And Create API Session
+Suite Teardown    Delete All Sessions
 
 
 *** Variables ***
@@ -77,11 +78,6 @@ Delete Tag
     ${response}    DELETE On Session   fotoblog    ${DELETE_TAG_ENDPOINT}/${Tag-ID}
     Status Should Be    200    ${response}
     Run Keyword If    '${response.status_code}' == '200'    Log    Deleted tag ID ${Tag-ID}. Status code: ${response.status_code}    INFO
-    
-Set Bearer Token And Create API Session
-    [Documentation]    Creates an API session and sets the bearer token for authentication
-    Login And Set Bearer Token
-    Create Session    fotoblog    ${BASE_URL}    headers={"Authorization": "Bearer ${BEARER_TOKEN}"}
 
 Tag Should Not Be Present
     [Arguments]    ${tag_id}

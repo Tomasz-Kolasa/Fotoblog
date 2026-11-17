@@ -90,9 +90,7 @@ Successful Login Redirects Main Page And A Success Toast Should Be Displayed
 *** Keywords ***
 
 The User Submits Invalid Credentials
-    Input Text    ${LOGIN_INPUT_USERNAME}    ${invalid_username}
-    Input Text    ${LOGIN_INPUT_PASSWORD}    ${invalid_password}
-    Click Element    ${LOGIN_BUTTON_ZALOGUJ}
+    Login With Credentials    ${invalid_username}    ${invalid_password}
 
 The Invalid Login Error Toast Should Be Displayed
     Wait Until Element Is Visible    ${LOGIN_ELEMENT_TOAST_TXT}    10s
@@ -130,9 +128,7 @@ The User Submits Too Long Password
     Input Text    ${LOGIN_INPUT_PASSWORD}    this_is_a_very_long_password_exceeding_the_maximum_length
 
 The User Subbmits Valid Username And Valid Password
-    Input Text    ${LOGIN_INPUT_USERNAME}    ${USERNAME.value}
-    Input Text    ${LOGIN_INPUT_PASSWORD}    ${PASSWORD.value}
-    Click Element    ${LOGIN_BUTTON_ZALOGUJ}
+    Login With Credentials    ${USERNAME.value}    ${PASSWORD.value}
 
 The User Should Be Redirected To The Main Page
     Wait Until Location Is    ${BASE_URL}/    10s
