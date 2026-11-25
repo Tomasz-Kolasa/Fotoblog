@@ -1,0 +1,111 @@
+$kind: http-request
+url: "{{baseUrl}}/Photos/GetAll"
+method: GET
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 200\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Content-Type is present\", function () {\r
+
+      \    pm.response.to.have.header(\"Content-Type\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Content-Type is application/json\", function () {\r
+
+      \    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r
+
+      });\r
+
+      \r
+
+      const jsonData = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Response JSON has expected properties\", function () {\r
+
+      \    pm.expect(jsonData).to.haveOwnProperty(\"errorCode\");\r
+
+      \    pm.expect(jsonData).to.haveOwnProperty(\"status\");\r
+
+      \    pm.expect(jsonData).to.haveOwnProperty(\"data\");\r
+
+      \    pm.expect(jsonData.data).to.be.an(\"array\");\r
+
+      \r
+
+      \    pm.expect(jsonData.errorCode).to.equal(null);\r
+
+      \    pm.expect(jsonData.status).to.equal(true);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response contains at least one photo with expected properties\", function () {\r
+
+      \r
+
+      \    pm.expect(jsonData.data.length).to.be.greaterThan(0);\r
+
+      \r
+
+      \    jsonData.data.forEach(photo => {\r
+
+      \        pm.expect(photo).to.have.property('id');\r
+
+      \        pm.expect(photo).to.have.property('createdAt');\r
+
+      \        pm.expect(photo).to.have.property('title');\r
+
+      \        pm.expect(photo).to.have.property('description');\r
+
+      \        pm.expect(photo).to.have.property('originalUrl');\r
+
+      \        pm.expect(photo).to.have.property('thumbnailUrl');\r
+
+      \        pm.expect(photo).to.have.property('tags');\r
+
+      \    });\r
+
+      \r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response contains added test photo with the expected title\", function () {\r
+
+      \    \r
+
+      \    // save data for the Photos/Delete request\r
+
+      \    const photoTitle = pm.collectionVariables.get(\"photoTitle\");\r
+
+      \    const foundTestPhotos = jsonData.data.filter(photo => photo.title.includes(photoTitle));\r
+
+      \    pm.collectionVariables.set(\"foundTestPhotosIds\", JSON.stringify(foundTestPhotos.map(photo => photo.id)));\r
+
+      \r
+
+      \    pm.expect(foundTestPhotos.length).to.be.greaterThan(0);\r
+
+      \r
+
+      });\r\n"
+    language: text/javascript
+  - type: beforeRequest
+    code: ""
+    language: text/javascript
+order: 752

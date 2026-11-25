@@ -1,0 +1,17 @@
+$kind: collection
+name: /Photos/Delete
+description: |-
+  This scenario verifies if photo added in /Photos/AddNew scenario can be reomoved.
+
+  To delete the photo we need it's ID. But when a photo is added, no id is returned.
+
+  Hence in order to delete previously added photo we need to relay on photo title.
+
+  To delete the photo added in /Photos/AddNew scenario, the procedure is as follows:
+
+  1. send Photos/GetAll request
+      
+  2. Find ID of the photos with Title of previously added photo
+      
+  3. send request
+order: 6146
