@@ -10,3 +10,4 @@ ${LOGIN_ENDPOINT}           /Auth/Login
 ${ADD_PHOTO_ENDPOINT}       /Photos/AddNew
 ${GET_ALL_PHOTOS_ENDPOINT}  /Photos/GetAll
 ${DELETE_PHOTO_ENDPOINT}    /Photos/Delete
+${UPDATE_PHOTO_ENDPOINT}    /Photos/Update
