@@ -78,7 +78,7 @@ Get Photo Object By Title
 
     ${photo_objects}=    Set Variable    ${{ [p for p in $response.json()['data'] if p['title'] == $title] }}
     
-    IF    len($photo_objects) == 1
+    IF    len($photo_objects) > 0
         RETURN    ${photo_objects}[0]
     ELSE
         RETURN    ${null}
